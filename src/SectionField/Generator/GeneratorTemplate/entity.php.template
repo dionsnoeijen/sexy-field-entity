@@ -1,0 +1,48 @@
+<?php
+declare (strict_types=1);
+
+namespace {{ namespace }};
+
+use Tardigrades;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
+{{ use }}
+
+class {{ section }}
+{
+    {{ properties }}
+
+    /** @var int */
+    private $id;
+
+    public function __construct()
+    {
+        {{ constructor }}
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    {{ methods }}
+    {{ getSlug }}
+    {{ getDefault }}
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        {{ validatorMetadata }}
+        {{ validatorMetadataSectionPhase }}
+    }
+
+    public function onPrePersist(): void
+    {
+        {{ prePersist }}
+    }
+
+    public function onPreUpdate(): void
+    {
+        {{ preUpdate }}
+    }
+}
+
