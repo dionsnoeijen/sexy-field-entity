@@ -10,6 +10,7 @@
     }
   ],
   "require": {
+    "tardigrades/sexy-field": "dev-master",
     "symfony/dependency-injection": "^3.3.2",
     "symfony/yaml": "^3.3.2",
     "symfony/config": "^3.3.2",
