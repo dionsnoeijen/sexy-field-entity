@@ -2,6 +2,7 @@
   "name": "tardigrades/sexy-field-entity",
   "description": "Section field entity generator",
   "minimum-stability": "dev",
+  "prefer-stable": true,
   "license": "MIT",
   "authors": [
     {
@@ -10,6 +11,7 @@
     }
   ],
   "require": {
+    "php": "^7.1",
     "symfony/dependency-injection": "^3.3.2",
     "symfony/yaml": "^3.3.2",
     "symfony/config": "^3.3.2",
