@@ -134,9 +134,9 @@ class EntityGenerator extends Generator implements GeneratorInterface
     {
         if ((string) $slugField !== 'slug') {
             return <<<EOT
-public function getSlug(): Tardigrades\FieldType\Slug\ValueObject\Slug
+public function getSlug(): Tardigrades\SectionField\ValueObject\Slug
 {
-    return Tardigrades\FieldType\Slug\ValueObject\Slug::fromString(\$this->{$slugField});
+    return Tardigrades\SectionField\ValueObject\Slug::fromString(\$this->{$slugField});
 }
 EOT;
         }
