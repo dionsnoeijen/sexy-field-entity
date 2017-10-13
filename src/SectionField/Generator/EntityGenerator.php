@@ -73,7 +73,7 @@ class EntityGenerator extends Generator implements GeneratorInterface
                     $parsed,
                     'generator',
                     'No generator defined for ' .
-                    $field->getLabel() . 'type: ' . $field->getFieldType()->getFullyQualifiedClassName()
+                    $field->getName() . 'type: ' . $field->getFieldType()->getFullyQualifiedClassName()
                 );
                 Assertion::keyExists(
                     $parsed['generator'],
