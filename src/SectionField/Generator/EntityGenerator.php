@@ -69,14 +69,11 @@ class EntityGenerator extends Generator implements GeneratorInterface
             $parsed = Yaml::parse(\file_get_contents($yml));
 
             try {
-                $label = !empty($field->getFieldTranslations()[0]) ?
-                    $field->getFieldTranslations()[0]->getLabel() :
-                    'Opposing field';
                 Assertion::keyExists(
                     $parsed,
                     'generator',
                     'No generator defined for ' .
-                    $label . 'type: ' . $field->getFieldType()->getFullyQualifiedClassName()
+                    $field->getLabel() . 'type: ' . $field->getFieldType()->getFullyQualifiedClassName()
                 );
                 Assertion::keyExists(
                     $parsed['generator'],
