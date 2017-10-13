@@ -93,9 +93,7 @@ class EntityGenerator extends Generator implements GeneratorInterface
                             ];
                         }
                         $templateDir = TemplateDir::fromString($this->getFieldTypeTemplateDirectory(
-                            $field,
-                            'sexy-field-field-types-base',
-                            'sexy-field-entity'
+                            $field, 'sexy-field-entity'
                         ));
                         $this->templates[$item][] = $generator::generate($field, $templateDir, $options);
                     } catch (\Exception $exception) {
@@ -224,13 +222,7 @@ EOT;
         foreach ($generatorConfig['entity'] as $handle => $options) {
 
             $field = $this->fieldManager->readByHandle(Handle::fromString($handle));
-            /** @var FieldTypeInterface $fieldType */
-            $fieldType = $this->container->get((string) $field->getFieldType()->getFullyQualifiedClassName());
-            $templateDirectory = str_replace(
-                'sexy-field-field-types-base',
-                'sexy-field-entity',
-                $fieldType->directory()
-            );
+            $templateDirectory = $this->getFieldTypeTemplateDirectory($field, 'sexy-field-entity');
 
             foreach ($options as $assertion => $assertionOptions) {
                 try {
