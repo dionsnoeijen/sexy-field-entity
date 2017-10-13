@@ -15,16 +15,16 @@ namespace Tardigrades\FieldType\Generator;
 
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\FieldType\ValueObject\Template;
+use Tardigrades\FieldType\ValueObject\TemplateDir;
 use Tardigrades\SectionField\Generator\Loader\TemplateLoader;
 
 class EntityPrePersistGenerator implements GeneratorInterface
 {
-    public static function generate(FieldInterface $field): Template
+    public static function generate(FieldInterface $field, TemplateDir $templateDir): Template
     {
         if (in_array('prePersist', $field->getConfig()->getEntityEvents())) {
             $asString = (string) TemplateLoader::load(
-                $field->getFieldType()->getInstance()->directory()
-                . '/GeneratorTemplate/entity.prepersist.php.template'
+                (string) $templateDir . '/GeneratorTemplate/entity.prepersist.php.template'
             );
 
             $asString = str_replace(

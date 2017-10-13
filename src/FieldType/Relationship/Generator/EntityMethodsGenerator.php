@@ -17,12 +17,13 @@ use Doctrine\Common\Util\Inflector;
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\FieldType\Generator\GeneratorInterface;
 use Tardigrades\FieldType\ValueObject\Template;
+use Tardigrades\FieldType\ValueObject\TemplateDir;
 use Tardigrades\SectionField\Generator\Loader\TemplateLoader;
 use Tardigrades\SectionField\ValueObject\SectionConfig;
 
 class EntityMethodsGenerator implements GeneratorInterface
 {
-    public static function generate(FieldInterface $field, ...$options): Template
+    public static function generate(FieldInterface $field, TemplateDir $templateDir, ...$options): Template
     {
         $fieldConfig = $field->getConfig()->toArray();
 
@@ -30,7 +31,7 @@ class EntityMethodsGenerator implements GeneratorInterface
         $sectionConfig = $options[0]['sectionConfig'];
 
         return Template::create((string) TemplateLoader::load(
-            $field->getFieldType()->getInstance()->directory() .
+            (string) $templateDir .
             '/GeneratorTemplate/entity.methods.php', [
                 'kind' => $fieldConfig['field']['kind'],
                 'pluralMethodName' => ucfirst(Inflector::pluralize($fieldConfig['field']['to'])),

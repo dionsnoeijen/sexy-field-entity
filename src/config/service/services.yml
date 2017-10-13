@@ -5,5 +5,5 @@ services:
       - '@section_field.manager.doctrine.field_manager'
       - '@section_field.manager.doctrine.field_type_manager'
       - '@section_field.manager.doctrine.section_manager'
-
+      - '@service_container'
 

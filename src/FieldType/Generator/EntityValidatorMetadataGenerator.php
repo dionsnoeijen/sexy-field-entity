@@ -19,12 +19,11 @@ use Tardigrades\SectionField\Generator\Loader\TemplateLoader;
 
 class EntityValidatorMetadataGenerator implements GeneratorInterface
 {
-    public static function generate(FieldInterface $field): Template
+    public static function generate(FieldInterface $field, TemplateDir $templateDir): Template
     {
         $asString = (string) Template::create(
             (string) TemplateLoader::load(
-                $field->getFieldType()->getInstance()->directory() .
-                '/GeneratorTemplate/entity.validator-metadata.php.template'
+                (string) $templateDir . '/GeneratorTemplate/entity.validator-metadata.php.template'
             )
         );
 

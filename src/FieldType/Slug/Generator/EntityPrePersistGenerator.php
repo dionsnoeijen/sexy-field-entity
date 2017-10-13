@@ -23,11 +23,11 @@ use Tardigrades\SectionField\Generator\Loader\TemplateLoader;
 
 class EntityPrePersistGenerator implements GeneratorInterface
 {
-    public static function generate(FieldInterface $field): Template
+    public static function generate(FieldInterface $field, TemplateDir $templateDir): Template
     {
         $template = PrePersistTemplate::create(
             TemplateLoader::load(
-                __DIR__ . '/../GeneratorTemplate/entity.prepersist.php.template'
+                $templateDir . '/GeneratorTemplate/entity.prepersist.php.template'
             )
         );
 

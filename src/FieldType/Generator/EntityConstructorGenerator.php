@@ -15,10 +15,11 @@ namespace Tardigrades\FieldType\Generator;
 
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\FieldType\ValueObject\Template;
+use Tardigrades\FieldType\ValueObject\TemplateDir;
 
 class EntityConstructorGenerator implements GeneratorInterface
 {
-    public static function generate(FieldInterface $field): Template
+    public static function generate(FieldInterface $field, TemplateDir $templateDir): Template
     {
     }
 }
