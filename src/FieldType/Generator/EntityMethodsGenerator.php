@@ -23,8 +23,7 @@ class EntityMethodsGenerator implements GeneratorInterface
     public static function generate(FieldInterface $field, TemplateDir $templateDir): Template
     {
         $asString = (string) TemplateLoader::load(
-            (string) $templateDir .
-            '/GeneratorTemplate/entity.methods.php.template'
+            (string) $templateDir . '/GeneratorTemplate/entity.methods.php.template'
         );
 
         $asString = str_replace(

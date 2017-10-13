@@ -15,6 +15,7 @@ namespace Tardigrades\FieldType\Generator;
 
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\FieldType\ValueObject\Template;
+use Tardigrades\FieldType\ValueObject\TemplateDir;
 use Tardigrades\SectionField\Generator\Loader\TemplateLoader;
 
 class EntityValidatorMetadataGenerator implements GeneratorInterface

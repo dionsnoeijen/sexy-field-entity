@@ -24,8 +24,7 @@ class EntityUseGenerator implements GeneratorInterface
     {
         return Template::create(
             (string) TemplateLoader::load(
-                $field->getFieldType()->getInstance()->directory() .
-                '/GeneratorTemplate/entity.use.php.template'
+                (string) $templateDir . '/GeneratorTemplate/entity.use.php.template'
             )
         );
     }
