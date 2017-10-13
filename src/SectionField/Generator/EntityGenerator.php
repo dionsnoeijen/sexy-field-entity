@@ -16,7 +16,6 @@ namespace Tardigrades\SectionField\Generator;
 use ReflectionClass;
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\Entity\SectionInterface;
-use Tardigrades\FieldType\FieldTypeInterface;
 use Tardigrades\FieldType\ValueObject\Template;
 use Tardigrades\FieldType\ValueObject\TemplateDir;
 use Tardigrades\SectionField\Generator\Loader\TemplateLoader;
