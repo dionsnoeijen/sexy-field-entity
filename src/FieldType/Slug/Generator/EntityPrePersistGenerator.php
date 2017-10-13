@@ -18,6 +18,7 @@ use Tardigrades\Entity\FieldInterface;
 use Tardigrades\FieldType\Generator\GeneratorInterface;
 use Tardigrades\FieldType\ValueObject\PrePersistTemplate;
 use Tardigrades\FieldType\ValueObject\Template;
+use Tardigrades\FieldType\ValueObject\TemplateDir;
 use Tardigrades\SectionField\ValueObject\Slug as SlugValueObject;
 use Tardigrades\SectionField\Generator\Loader\TemplateLoader;
 
