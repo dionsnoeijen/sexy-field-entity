@@ -221,7 +221,10 @@ EOT;
         foreach ($generatorConfig['entity'] as $handle => $options) {
 
             $field = $this->fieldManager->readByHandle(Handle::fromString($handle));
-            $templateDirectory = $this->getFieldTypeTemplateDirectory($field, 'sexy-field-entity');
+            $templateDirectory = $this->getFieldTypeTemplateDirectory(
+                $field,
+                'sexy-field-' . self::GENERATE_FOR
+            );
 
             foreach ($options as $assertion => $assertionOptions) {
                 try {
