@@ -4,11 +4,12 @@ declare (strict_types=1);
 namespace {{ namespace }};
 
 use Tardigrades;
+use Tardigrades\SectionField\Generator\CommonSectionInterface;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
 {{ use }}
 
-class {{ section }}
+class {{ section }} implements CommonSectionInterface
 {
     {{ properties }}
 
@@ -29,7 +30,7 @@ class {{ section }}
     {{ getSlug }}
     {{ getDefault }}
 
-    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    public static function loadValidatorMetadata(ClassMetadata $metadata): void
     {
         {{ validatorMetadata }}
         {{ validatorMetadataSectionPhase }}
