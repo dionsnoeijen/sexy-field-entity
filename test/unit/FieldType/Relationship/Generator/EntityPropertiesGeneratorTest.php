@@ -12,9 +12,9 @@ use Tardigrades\FieldType\ValueObject\TemplateDir;
 use Tardigrades\SectionField\ValueObject\FieldConfig;
 
 /**
- * @coversDefaultClass Tardigrades\FieldType\Relationship\Generator\EntityMethodsGenerator
+ * @coversDefaultClass Tardigrades\FieldType\Relationship\Generator\EntityPropertiesGenerator
  */
-final class EntityMethodsGeneratorTest extends TestCase
+final class EntityPropertiesGeneratorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -37,14 +37,14 @@ final class EntityMethodsGeneratorTest extends TestCase
                             'handle' => 'niets',
                             'kind' => 'one-to-many',
                             'entityEvents' => ['1', '2'],
-                            'to' => 'me!'
+                            'to' => 'you'
                         ]
                     ]
                 )
             );
 
         $mockedSectionConfig->shouldReceive('getClassName')
-            ->andReturn('this one');
+            ->andReturn('PauloClass');
 
         $options = ['sectionConfig' => $mockedSectionConfig];
         $generatedTemplate = EntityMethodsGenerator::generate($mockedFieldInterface, $templateDir, $options);
