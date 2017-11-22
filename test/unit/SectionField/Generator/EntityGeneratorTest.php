@@ -15,6 +15,7 @@ use Tardigrades\SectionField\Service\FieldTypeManagerInterface;
 use Tardigrades\SectionField\Service\SectionManagerInterface;
 use Tardigrades\SectionField\ValueObject\FieldTypeGeneratorConfig;
 use Tardigrades\SectionField\ValueObject\FullyQualifiedClassName;
+use Tardigrades\SectionField\ValueObject\Type;
 
 /**
  * @coversDefaultClass Tardigrades\SectionField\Generator\EntityGenerator
@@ -63,6 +64,8 @@ final class EntityGeneratorTest extends TestCase
             FullyQualifiedClassName::fromString('yesImQualified')
         );
         $fieldTypeMock->shouldReceive('directory')->andReturn('one/two');
+        $fieldTypeMock->shouldReceive('getType')->andReturn(Type::fromString('typoe'));
+
         $aField = new Field();
         $aField->setHandle('one');
         $aField->setName('one');
