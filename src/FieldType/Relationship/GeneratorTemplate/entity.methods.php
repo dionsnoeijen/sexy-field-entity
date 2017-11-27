@@ -34,7 +34,7 @@ public function remove<?php echo $methodName; ?>(<?php echo $entity; ?> $<?php e
 }
 <?php } ?>
 
-<?php if ($kind === 'many-to-one') { ?>
+<?php if ($kind === 'many-to-one' || $kind === 'one-to-one') { ?>
 public function get<?php echo $methodName; ?>(): ?<?php echo $entity . PHP_EOL; ?>
 {
     return $this-><?php echo $propertyName; ?>;
