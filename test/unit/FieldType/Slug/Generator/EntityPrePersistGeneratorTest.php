@@ -18,6 +18,7 @@ class EntityPrePersistGeneratorTest extends TestCase
     /**
      * @test
      * @covers ::generate
+     * @covers ::<private>
      */
     public function it_should_generate()
     {
@@ -36,7 +37,7 @@ class EntityPrePersistGeneratorTest extends TestCase
                             'to' => 'you',
                             'generator' => [
                                 'entity' => [
-                                    'slugFields' => ['snail', 'sexy']
+                                    'slugFields' => ['snail', 'sexy|DateTime|Y-m-d']
                                 ]
                             ]
                         ]
@@ -48,7 +49,7 @@ class EntityPrePersistGeneratorTest extends TestCase
         $this->assertInstanceOf(Template::class, $generatedTemplate);
         $this->assertFalse((string)$generatedTemplate === '');
         $this->assertEquals(
-            '$this->niets = Tardigrades\Helper\StringConverter::toSlug($this->getSnail() . \'-\' . $this->getSexy());
+            '$this->niets = Tardigrades\Helper\StringConverter::toSlug($this->getSnail() . \'-\' . $this->getSexy()->format(\'Y-m-d\'));
 ',
             (string) $generatedTemplate);
     }

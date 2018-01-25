@@ -136,21 +136,12 @@ public function getDefault(): string
 EOT;
     }
 
-    private function combine(array $templates): string
-    {
-        $combined = '';
-        foreach ($templates as $template) {
-            $combined .= $template;
-        }
-        return $combined;
-    }
-
     private function insertRenderedTemplates(string $template): string
     {
         foreach ($this->templates as $templateVariable=>$templates) {
             $template = str_replace(
                 '{{ ' . $templateVariable . ' }}',
-                $this->combine($templates),
+                \implode($templates),
                 $template
             );
         }
