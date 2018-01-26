@@ -26,8 +26,9 @@ final class EntityGeneratorTest extends TestCase
     /**
      * @test
      * @covers ::generateBySection
+     * @dataProvider configProvider
      */
-    public function it_generates_by_section()
+    public function it_generates_by_section_with_and_without_entity_constraints($configArrayForSection)
     {
         $container = Mockery::mock(ContainerInterface::class);
         $sectionManager = Mockery::mock(SectionManagerInterface::class);
@@ -36,25 +37,6 @@ final class EntityGeneratorTest extends TestCase
 
         $result = Mockery::mock(Writable::class);
 
-        $configArrayForSection = [
-            'section' => [
-                'name' => 'sexyon',
-                'handle' => 'sexyhandle',
-                'fields' => ['one', 'two', 'ten'],
-                'slug' => ['these'],
-                'default' => 'these',
-                'namespace' => 'My\Sexy\Namespace',
-                'generator' =>
-                    ['entity' =>
-                        [
-                            'one' =>
-                                [
-                                    'a' => 'b'
-                                ]
-                        ]
-                    ]
-            ]
-        ];
         $section = new Section();
         $section->setConfig($configArrayForSection);
         $section->setHandle('sexyhandle');
@@ -126,5 +108,46 @@ final class EntityGeneratorTest extends TestCase
         $this->assertInstanceOf(Writable::class, $generated);
         $this->assertEquals('My\\Sexy\\Namespace\\Entity\\', $generated->getNamespace());
         $this->assertEquals('Sexyhandle.php', $generated->getFilename());
+    }
+
+    public function configProvider()
+    {
+        return [
+            [
+                [
+                    'section' => [
+                        'name' => 'sexyon',
+                        'handle' => 'sexyhandle',
+                        'fields' => ['one', 'two', 'ten'],
+                        'slug' => ['these'],
+                        'default' => 'these',
+                        'namespace' => 'My\Sexy\Namespace',
+                        'generator' =>
+                            ['entity' =>
+                                [
+                                    'name' =>
+                                        [
+                                            'NotBlank' => null
+                                        ]
+                                ]
+                            ]
+                    ]
+                ]
+            ],
+            [
+                [
+                    'section' => [
+                        'name' => 'sexyon',
+                        'handle' => 'sexyhandle',
+                        'fields' => ['one', 'two', 'ten'],
+                        'slug' => ['these'],
+                        'default' => 'these',
+                        'namespace' => 'My\Sexy\Namespace',
+                        'generator' =>
+                            ['entity' => null]
+                    ]
+                ]
+            ]
+        ];
     }
 }
