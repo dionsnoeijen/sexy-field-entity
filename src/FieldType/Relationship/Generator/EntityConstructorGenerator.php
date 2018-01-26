@@ -28,7 +28,8 @@ class EntityConstructorGenerator implements GeneratorInterface
 
         return Template::create((string) TemplateLoader::load(
             (string) $templateDir .
-            '/GeneratorTemplate/entity.constructor.php', [
+            '/GeneratorTemplate/entity.constructor.php',
+            [
                 'kind' => $fieldConfig['field']['kind'],
                 'pluralPropertyName' => Inflector::pluralize($fieldConfig['field']['to'])
             ]
