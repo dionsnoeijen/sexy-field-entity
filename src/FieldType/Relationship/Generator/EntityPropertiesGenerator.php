@@ -28,7 +28,8 @@ class EntityPropertiesGenerator implements GeneratorInterface
 
         return Template::create((string) TemplateLoader::load(
             $templateDir .
-            '/GeneratorTemplate/entity.properties.php', [
+            '/GeneratorTemplate/entity.properties.php',
+            [
                 'kind' => $fieldConfig['field']['kind'],
                 'pluralPropertyName' => Inflector::pluralize($fieldConfig['field']['to']),
                 'entity' => ucfirst($fieldConfig['field']['to']),

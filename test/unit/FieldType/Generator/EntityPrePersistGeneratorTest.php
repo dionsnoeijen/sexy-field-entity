@@ -63,7 +63,9 @@ EOT;
     public function it_should_throw_error_if_config_is_wrong()
     {
         $this->expectException(NoPrePersistEntityEventDefinedInFieldConfigException::class);
+        // @codingStandardsIgnoreStart
         $this->expectExceptionMessage('In the field config this key: entityEvents with this value: - prePersist is not defined. Skipping pre update rendering for this field.');
+        // @codingStandardsIgnoreEnd
 
         $body = <<<'EOT'
 $this->{{ propertyName }} = new \DateTime('now');

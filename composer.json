@@ -27,6 +27,7 @@
     "phpunit/phpunit": "^6.1",
     "squizlabs/PHP_CodeSniffer": "^2.8",
     "mockery/mockery": "^0.9.9",
-    "mikey179/vfsStream": "^1.6"
+    "mikey179/vfsStream": "^1.6",
+    "phing/phing": "^2.16"
   }
 }
