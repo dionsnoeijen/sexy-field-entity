@@ -46,4 +46,3 @@ class {{ section }} implements CommonSectionInterface
         {{ preUpdate }}
     }
 }
-
