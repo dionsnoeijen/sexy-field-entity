@@ -40,7 +40,6 @@ class EntityGenerator extends Generator implements GeneratorInterface
     ];
 
     const GENERATE_FOR = 'entity';
-
     public function generateBySection(
         SectionInterface $section
     ): Writable {
@@ -63,14 +62,13 @@ class EntityGenerator extends Generator implements GeneratorInterface
     {
         /** @var FieldInterface $field */
         foreach ($fields as $field) {
-
             $parsed = $this->getFieldTypeGeneratorConfig($field, self::GENERATE_FOR);
 
             /**
              * @var string $item
              * @var \Tardigrades\FieldType\Generator\GeneratorInterface $generator
              */
-            foreach ($parsed[self::GENERATE_FOR] as $item=>$generator) {
+            foreach ($parsed[self::GENERATE_FOR] as $item => $generator) {
                 if (!key_exists($item, $this->templates)) {
                     $this->templates[$item] = [];
                 }
@@ -92,7 +90,8 @@ class EntityGenerator extends Generator implements GeneratorInterface
                             ];
                         }
                         $templateDir = TemplateDir::fromString($this->getFieldTypeTemplateDirectory(
-                            $field, 'sexy-field-entity'
+                            $field,
+                            'sexy-field-entity'
                         ));
                         $this->templates[$item][] = $generator::generate($field, $templateDir, $options);
                     } catch (\Exception $exception) {
@@ -107,7 +106,7 @@ class EntityGenerator extends Generator implements GeneratorInterface
 
     private function removeDoubles()
     {
-        foreach ($this->templates as $item=>&$templates) {
+        foreach ($this->templates as $item => &$templates) {
             $templates = array_unique($templates);
         }
     }
@@ -136,21 +135,12 @@ public function getDefault(): string
 EOT;
     }
 
-    private function combine(array $templates): string
-    {
-        $combined = '';
-        foreach ($templates as $template) {
-            $combined .= $template;
-        }
-        return $combined;
-    }
-
     private function insertRenderedTemplates(string $template): string
     {
-        foreach ($this->templates as $templateVariable=>$templates) {
+        foreach ($this->templates as $templateVariable => $templates) {
             $template = str_replace(
                 '{{ ' . $templateVariable . ' }}',
-                $this->combine($templates),
+                \implode($templates),
                 $template
             );
         }
@@ -218,53 +208,54 @@ EOT;
         $generatorConfig = $this->sectionConfig->getGeneratorConfig()->toArray();
         $metadata = '';
 
-        foreach ($generatorConfig['entity'] as $handle => $options) {
+        if (is_array($generatorConfig['entity'])) {
+            foreach ($generatorConfig['entity'] as $handle => $options) {
+                $field = $this->fieldManager->readByHandle(Handle::fromString($handle));
+                $templateDirectory = $this->getFieldTypeTemplateDirectory(
+                    $field,
+                    'sexy-field-' . self::GENERATE_FOR
+                );
 
-            $field = $this->fieldManager->readByHandle(Handle::fromString($handle));
-            $templateDirectory = $this->getFieldTypeTemplateDirectory(
-                $field,
-                'sexy-field-' . self::GENERATE_FOR
-            );
+                foreach ($options as $assertion => $assertionOptions) {
+                    try {
+                        $asString = (string) Template::create(
+                            (string) TemplateLoader::load(
+                                $templateDirectory . '/GeneratorTemplate/entity.validator-metadata.php.template'
+                            )
+                        );
+                        $asString = str_replace(
+                            '{{ propertyName }}',
+                            $field->getHandle(),
+                            $asString
+                        );
 
-            foreach ($options as $assertion => $assertionOptions) {
-                try {
-                    $asString = (string) Template::create(
-                        (string) TemplateLoader::load(
-                            $templateDirectory . '/GeneratorTemplate/entity.validator-metadata.php.template'
-                        )
-                    );
-                    $asString = str_replace(
-                        '{{ propertyName }}',
-                        $field->getHandle(),
-                        $asString
-                    );
-
-                    $asString = str_replace(
-                        '{{ assertion }}',
-                        $assertion,
-                        $asString
-                    );
-                    $arguments = '';
-                    if (is_array($assertionOptions)) {
-                        foreach ($assertionOptions as $optionKey => $optionValue) {
-                            $arguments .= "'{$optionKey}' => '{$optionValue}',";
+                        $asString = str_replace(
+                            '{{ assertion }}',
+                            $assertion,
+                            $asString
+                        );
+                        $arguments = '';
+                        if (is_array($assertionOptions)) {
+                            foreach ($assertionOptions as $optionKey => $optionValue) {
+                                $arguments .= "'{$optionKey}' => '{$optionValue}',";
+                            }
+                            if (!empty($arguments)) {
+                                $arguments = rtrim($arguments, ',');
+                                $arguments = "[{$arguments}]";
+                            }
                         }
-                        if (!empty($arguments)) {
-                            $arguments = rtrim($arguments, ',');
-                            $arguments = "[{$arguments}]";
+                        $asString = str_replace(
+                            '{{ assertionOptions }}',
+                            $arguments,
+                            $asString
+                        );
+                        if (strpos($template, $asString) === false) {
+                            // Add to metadata
+                            $metadata .= $asString;
                         }
+                    } catch (\Exception $exception) {
+                        $this->buildMessages[] = $exception->getMessage();
                     }
-                    $asString = str_replace(
-                        '{{ assertionOptions }}',
-                        $arguments,
-                        $asString
-                    );
-                    if (strpos($template, $asString) === false) {
-                        // Add to metadata
-                        $metadata .= $asString;
-                    }
-                } catch (\Exception $exception) {
-                    $this->buildMessages[] = $exception->getMessage();
                 }
             }
         }

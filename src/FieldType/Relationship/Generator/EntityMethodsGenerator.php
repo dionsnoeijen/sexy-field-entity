@@ -32,7 +32,8 @@ class EntityMethodsGenerator implements GeneratorInterface
 
         return Template::create((string) TemplateLoader::load(
             (string) $templateDir .
-            '/GeneratorTemplate/entity.methods.php', [
+            '/GeneratorTemplate/entity.methods.php',
+            [
                 'kind' => $fieldConfig['field']['kind'],
                 'pluralMethodName' => ucfirst(Inflector::pluralize($fieldConfig['field']['to'])),
                 'pluralPropertyName' => Inflector::pluralize($fieldConfig['field']['to']),

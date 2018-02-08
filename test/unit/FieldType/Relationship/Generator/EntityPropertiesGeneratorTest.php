@@ -47,7 +47,7 @@ final class EntityPropertiesGeneratorTest extends TestCase
             ->andReturn('PauloClass');
 
         $options = ['sectionConfig' => $mockedSectionConfig];
-        $generatedTemplate = EntityMethodsGenerator::generate($mockedFieldInterface, $templateDir, $options);
+        $generatedTemplate = EntityPropertiesGenerator::generate($mockedFieldInterface, $templateDir, $options);
         $this->assertInstanceOf(Template::class, $generatedTemplate);
         $this->assertFalse((string)$generatedTemplate === '');
     }

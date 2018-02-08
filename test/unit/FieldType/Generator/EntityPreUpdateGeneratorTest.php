@@ -64,7 +64,9 @@ EOT;
     public function it_should_throw_exception_when_wrong_config()
     {
         $this->expectException(NoPreUpdateEntityEventDefinedInFieldConfigException::class);
+        // @codingStandardsIgnoreStart
         $this->expectExceptionMessage('In the field config this key: entityEvents with this value: - preUpdate is not defined. Skipping pre update rendering for this field.');
+        // @codingStandardsIgnoreEnd
 
         $body = <<<'EOT'
 $this->{{ propertyName }} = new \DateTime('now');
