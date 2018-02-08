@@ -49,9 +49,8 @@ class EntityPrePersistGeneratorTest extends TestCase
         $this->assertInstanceOf(Template::class, $generatedTemplate);
         $this->assertFalse((string)$generatedTemplate === '');
         // @codingStandardsIgnoreStart
-        $this->assertEquals(
-            '$this->niets = Tardigrades\Helper\StringConverter::toSlug($this->getSnail() . \'-\' . $this->getSexy()->format(\'Y-m-d\'));
-',
+        $this->assertContains(
+            '$this->niets = Tardigrades\Helper\StringConverter::toSlug($this->getSnail() . \'-\' . $this->getSexy()->format(\'Y-m-d\'));',
             (string) $generatedTemplate
         );
         // @codingStandardsIgnoreEnd
