@@ -48,11 +48,11 @@ class EntityPrePersistGeneratorTest extends TestCase
         $generatedTemplate = EntityPrePersistGenerator::generate($mockedFieldInterface, $templateDir);
         $this->assertInstanceOf(Template::class, $generatedTemplate);
         $this->assertFalse((string)$generatedTemplate === '');
-        // @codingStandardsIgnoreStart
+
         $this->assertContains(
+            // phpcs:ignore Generic.Files.LineLength
             '$this->niets = Tardigrades\Helper\StringConverter::toSlug($this->getSnail() . \'-\' . $this->getSexy()->format(\'Y-m-d\'));',
             (string) $generatedTemplate
         );
-        // @codingStandardsIgnoreEnd
     }
 }
