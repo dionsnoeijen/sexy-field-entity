@@ -48,7 +48,8 @@ class EntityPrePersistGeneratorTest extends TestCase
         $this->assertInstanceOf(Template::class, $generatedTemplate);
         $this->assertFalse((string)$generatedTemplate === '');
         $this->assertEquals(
-            '$this->niets = Tardigrades\Helper\StringConverter::toSlug($this->getSnail() . \'-\' . $this->getSexy());
+            '// phpcs:ignore Generic.Files.LineLength -- easier than to write a method that will fix line ending and indentation...
+$this->niets = Tardigrades\Helper\StringConverter::toSlug($this->getSnail() . \'-\' . $this->getSexy());
 ',
             (string) $generatedTemplate);
     }
