@@ -22,9 +22,27 @@ class EntityPropertiesGenerator implements GeneratorInterface
 {
     public static function generate(FieldInterface $field, TemplateDir $templateDir): Template
     {
+        $nullable = true;
+
+        try {
+            $generatorConfig = $field->getConfig()->getGeneratorConfig()->toArray();
+
+            if (!$generatorConfig['entity']['validator']['NotBlank']) { //which means the yml tilde: use default value
+                $nullable = false;
+            }
+        } catch (\Exception $e) {
+            //
+        }
+        
         $asString = (string) TemplateLoader::load(
             (string) $templateDir .
             '/GeneratorTemplate/entity.properties.php.template'
+        );
+
+        $asString = str_replace(
+            '{{ nullable }}',
+            $nullable ? '?' : '',
+            $asString
         );
 
         $asString = str_replace(
