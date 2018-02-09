@@ -1,2 +1,2 @@
-/** @var \DateTime */
+/** @var {{ nullable }}\DateTime */
 protected ${{ propertyName }};
