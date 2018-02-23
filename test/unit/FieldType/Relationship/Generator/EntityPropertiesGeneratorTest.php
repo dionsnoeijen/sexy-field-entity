@@ -46,9 +46,58 @@ final class EntityPropertiesGeneratorTest extends TestCase
         $mockedSectionConfig->shouldReceive('getClassName')
             ->andReturn('PauloClass');
 
+        $expected = <<<'EOT'
+/** @var ArrayCollection */
+protected $yous;
+
+
+EOT;
+
         $options = ['sectionConfig' => $mockedSectionConfig];
         $generatedTemplate = EntityPropertiesGenerator::generate($mockedFieldInterface, $templateDir, $options);
         $this->assertInstanceOf(Template::class, $generatedTemplate);
-        $this->assertFalse((string)$generatedTemplate === '');
+        $this->assertSame($expected, (string)$generatedTemplate);
+    }
+
+    /**
+     * @test
+     * @covers ::generate
+     */
+    public function it_generates_and_uses_field_aliases()
+    {
+        $mockedFieldInterface = Mockery::mock(new Field())->makePartial();
+        $mockedSectionConfig = Mockery::mock('alias:SectionConfig')->makePartial();
+        $templateDir = TemplateDir::fromString('src/FieldType/Relationship');
+
+        $mockedFieldInterface->shouldReceive('getConfig')
+            ->andReturn(
+                FieldConfig::fromArray(
+                    [
+                        'field' => [
+                            'name' => 'iets',
+                            'handle' => 'niets',
+                            'kind' => 'one-to-many',
+                            'entityEvents' => ['1', '2'],
+                            'to' => 'you',
+                            'as' => 'somethingElse'
+                        ]
+                    ]
+                )
+            );
+
+        $mockedSectionConfig->shouldReceive('getClassName')
+            ->andReturn('PauloClass');
+
+        $expected = <<<'EOT'
+/** @var ArrayCollection */
+protected $somethingElses;
+
+
+EOT;
+
+        $options = ['sectionConfig' => $mockedSectionConfig];
+        $generatedTemplate = EntityPropertiesGenerator::generate($mockedFieldInterface, $templateDir, $options);
+        $this->assertInstanceOf(Template::class, $generatedTemplate);
+        $this->assertSame($expected, (string)$generatedTemplate);
     }
 }

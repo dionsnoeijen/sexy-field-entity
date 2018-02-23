@@ -30,16 +30,18 @@ class EntityMethodsGenerator implements GeneratorInterface
         /** @var SectionConfig $sectionConfig */
         $sectionConfig = $options[0]['sectionConfig'];
 
+        $toHandle = $fieldConfig['field']['as'] ?? $fieldConfig['field']['to'];
+
         return Template::create((string) TemplateLoader::load(
             (string) $templateDir .
             '/GeneratorTemplate/entity.methods.php',
             [
                 'kind' => $fieldConfig['field']['kind'],
-                'pluralMethodName' => ucfirst(Inflector::pluralize($fieldConfig['field']['to'])),
-                'pluralPropertyName' => Inflector::pluralize($fieldConfig['field']['to']),
-                'methodName' => ucfirst($fieldConfig['field']['to']),
+                'pluralMethodName' => ucfirst(Inflector::pluralize($toHandle)),
+                'pluralPropertyName' => Inflector::pluralize($toHandle),
+                'methodName' => ucfirst($toHandle),
                 'entity' => ucfirst($fieldConfig['field']['to']),
-                'propertyName' => $fieldConfig['field']['to'],
+                'propertyName' => $toHandle,
                 'thatMethodName' => $sectionConfig->getClassName()
             ]
         ));
