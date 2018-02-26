@@ -48,7 +48,7 @@ final class EntityMethodsGeneratorTest extends TestCase
 
         $options = ['sectionConfig' => $mockedSectionConfig];
         $expected = <<<'EOT'
-public function getMes(): Collection
+public function getMes(): ?Collection
 {
     return $this->mes;
 }
@@ -114,7 +114,7 @@ EOT;
 
         $options = ['sectionConfig' => $mockedSectionConfig];
         $expected = <<<'EOT'
-public function getSomethingElses(): Collection
+public function getSomethingElses(): ?Collection
 {
     return $this->somethingElses;
 }
