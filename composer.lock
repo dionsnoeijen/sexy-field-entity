@@ -4025,12 +4025,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dionsnoeijen/sexy-field.git",
-                "reference": "d5d0fd7415b60d8b5281ec8147e0c41f2811bda3"
+                "reference": "87977b19040496cb35e90ec7c3deb0fa4c2c87a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dionsnoeijen/sexy-field/zipball/d5d0fd7415b60d8b5281ec8147e0c41f2811bda3",
-                "reference": "d5d0fd7415b60d8b5281ec8147e0c41f2811bda3",
+                "url": "https://api.github.com/repos/dionsnoeijen/sexy-field/zipball/87977b19040496cb35e90ec7c3deb0fa4c2c87a6",
+                "reference": "87977b19040496cb35e90ec7c3deb0fa4c2c87a6",
                 "shasum": ""
             },
             "require": {
@@ -4041,6 +4041,7 @@
                 "symfony/config": "^3.3.2",
                 "symfony/console": "^3.3.2",
                 "symfony/dependency-injection": "^3.3.2",
+                "symfony/event-dispatcher": "^3.3.2",
                 "symfony/form": "^3.3.2",
                 "symfony/inflector": "^3.3.2",
                 "symfony/security": "^3.3.2",
@@ -4052,8 +4053,9 @@
             "require-dev": {
                 "mikey179/vfsstream": "^1.6",
                 "mockery/mockery": "^0.9.9",
+                "phing/phing": "^2.16",
                 "phpunit/phpunit": "^6.1",
-                "squizlabs/php_codesniffer": "^2.8"
+                "squizlabs/php_codesniffer": "^3.1"
             },
             "type": "library",
             "autoload": {
@@ -4072,7 +4074,7 @@
                 }
             ],
             "description": "SexyField helps you build application structure and accompanying forms.",
-            "time": "2017-10-13T14:41:37+00:00"
+            "time": "2018-02-27T08:26:23+00:00"
         },
         {
             "name": "theseer/tokenizer",
