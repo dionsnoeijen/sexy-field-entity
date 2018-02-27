@@ -39,6 +39,8 @@ class EntityGenerator extends Generator implements GeneratorInterface
 
         $this->sectionConfig = $section->getConfig();
 
+        $this->initializeTemplates();
+
         $fields = $this->fieldManager->readByHandles($this->sectionConfig->getFields());
         $fields = $this->addOpposingRelationships($section, $fields);
 
@@ -53,9 +55,6 @@ class EntityGenerator extends Generator implements GeneratorInterface
 
     private function generateElements(array $fields): void
     {
-        $this->initializeTemplates();
-        $this->buildMessages = [];
-
         /** @var FieldInterface $field */
         foreach ($fields as $field) {
             $parsed = $this->getFieldTypeGeneratorConfig($field, self::GENERATE_FOR);
