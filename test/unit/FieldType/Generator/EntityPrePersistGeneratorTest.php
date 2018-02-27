@@ -3,6 +3,7 @@ declare (strict_types=1);
 
 namespace Tardigrades\FieldType\Generator;
 
+use Assert\InvalidArgumentException;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Tardigrades\Entity\Field;
@@ -38,7 +39,11 @@ EOT;
             'field' => [
                 'name' => 'foo',
                 'handle' => 'bar',
-                'entityEvents' => ['prePersist']
+                'generator' => [
+                    'entity' => [
+                        'event' => ['prePersist']
+                    ]
+                ]
             ]
         ];
 
@@ -62,9 +67,9 @@ EOT;
      */
     public function it_should_throw_error_if_config_is_wrong()
     {
-        $this->expectException(NoPrePersistEntityEventDefinedInFieldConfigException::class);
+        $this->expectException(InvalidArgumentException::class);
         // @codingStandardsIgnoreStart
-        $this->expectExceptionMessage('In the field config this key: entityEvents with this value: - prePersist is not defined. Skipping pre update rendering for this field.');
+        $this->expectExceptionMessage('Entity events should be an array of events you want a generator to run for.');
         // @codingStandardsIgnoreEnd
 
         $body = <<<'EOT'
@@ -85,7 +90,11 @@ EOT;
             'field' => [
                 'name' => 'foo',
                 'handle' => 'bar',
-                'entityEvents' => []
+                'generator' => [
+                    'entity' => [
+                        'event' => 'nothingandwrong'
+                    ]
+                ]
             ]
         ];
 

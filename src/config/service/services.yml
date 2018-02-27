@@ -1,9 +1,10 @@
 services:
-  section_field.generator.entity_generator:
-    class: Tardigrades\SectionField\Generator\EntityGenerator
+  Tardigrades\SectionField\Generator\EntityGenerator:
+    autowire: false
     arguments:
-      - '@section_field.manager.doctrine.field_manager'
-      - '@section_field.manager.doctrine.field_type_manager'
-      - '@section_field.manager.doctrine.section_manager'
-      - '@service_container'
+      $fieldManager: '@Tardigrades\SectionField\Service\DoctrineFieldManager'
+      $fieldTypeManager: '@Tardigrades\SectionField\Service\DoctrineFieldTypeManager'
+      $sectionManager: '@Tardigrades\SectionField\Service\DoctrineSectionManager'
+      $container: '@service_container'
 
+  section_field.generator.entity_generator: '@Tardigrades\SectionField\Generator\EntityGenerator'

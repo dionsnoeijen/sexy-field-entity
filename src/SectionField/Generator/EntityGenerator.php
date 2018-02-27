@@ -30,14 +30,7 @@ class EntityGenerator extends Generator implements GeneratorInterface
     private $sectionConfig;
 
     /** @var array */
-    private $templates = [
-        'use' => [],
-        'properties' => [],
-        'constructor' => [],
-        'methods' => [],
-        'prePersist' => [],
-        'preUpdate' => []
-    ];
+    private $templates;
 
     const GENERATE_FOR = 'entity';
     public function generateBySection(
@@ -60,6 +53,9 @@ class EntityGenerator extends Generator implements GeneratorInterface
 
     private function generateElements(array $fields): void
     {
+        $this->initializeTemplates();
+        $this->buildMessages = [];
+
         /** @var FieldInterface $field */
         foreach ($fields as $field) {
             $parsed = $this->getFieldTypeGeneratorConfig($field, self::GENERATE_FOR);
@@ -102,6 +98,18 @@ class EntityGenerator extends Generator implements GeneratorInterface
 
             $this->removeDoubles();
         }
+    }
+
+    private function initializeTemplates(): void
+    {
+        $this->templates = [
+            'use' => [],
+            'properties' => [],
+            'constructor' => [],
+            'methods' => [],
+            'prePersist' => [],
+            'preUpdate' => []
+        ];
     }
 
     private function removeDoubles()
