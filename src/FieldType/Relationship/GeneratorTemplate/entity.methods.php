@@ -1,5 +1,5 @@
 <?php if ($kind === 'one-to-many' || $kind === 'many-to-many') { ?>
-public function get<?php echo $pluralMethodName; ?>(): Collection
+public function get<?php echo $pluralMethodName; ?>(): ?Collection
 {
     return $this-><?php echo $pluralPropertyName; ?>;
 }
