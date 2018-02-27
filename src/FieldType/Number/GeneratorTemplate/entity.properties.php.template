@@ -1,2 +1,2 @@
-/** @var {{ nullable }}int */
+/** @var {{ nullable }}float */
 protected ${{ propertyName }};
