@@ -26,12 +26,15 @@ class EntityConstructorGenerator implements GeneratorInterface
     {
         $fieldConfig = $field->getConfig()->toArray();
 
+        $propertyName = !empty($fieldConfig['field']['as']) ?
+            $fieldConfig['field']['as'] : $fieldConfig['field']['to'];
+
         return Template::create((string) TemplateLoader::load(
             (string) $templateDir .
             '/GeneratorTemplate/entity.constructor.php',
             [
                 'kind' => $fieldConfig['field']['kind'],
-                'pluralPropertyName' => Inflector::pluralize($fieldConfig['field']['to'])
+                'pluralPropertyName' => Inflector::pluralize($propertyName)
             ]
         ));
     }
