@@ -33,10 +33,10 @@ class EntityGenerator extends Generator implements GeneratorInterface
     private $templates;
 
     /** @var array */
-    private $prePersistInfo = [];
+    private $prePersistInfo;
 
     /** @var array */
-    private $preUpdateInfo = [];
+    private $preUpdateInfo;
 
     const GENERATE_FOR = 'entity';
 
@@ -53,6 +53,7 @@ class EntityGenerator extends Generator implements GeneratorInterface
 
         $this->sectionConfig = $section->getConfig();
 
+        // Make sure you start anew for every template
         $this->initializeTemplates();
 
         $fields = $this->fieldManager->readByHandles($this->sectionConfig->getFields());
@@ -189,6 +190,9 @@ class EntityGenerator extends Generator implements GeneratorInterface
 
     private function initializeTemplates(): void
     {
+        $this->prePersistInfo = [];
+        $this->preUpdateInfo = [];
+
         $this->templates = [
             self::USE_TEMPLATE_VAR => [],
             self::PROPERTIES_TEMPLATE_VAR => [],
