@@ -1,0 +1,1 @@
+$this->{{ propertyName }} = Tardigrades\FieldType\Uuid\Helper\UuidV4::get();

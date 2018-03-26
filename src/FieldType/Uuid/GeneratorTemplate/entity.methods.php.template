@@ -1,0 +1,10 @@
+public function get{{ methodName }}(): {{ nullable }}string
+{
+    return $this->{{ propertyName }};
+}
+
+public function set{{ methodName }}({{ nullable }}string ${{ propertyName }}): {{ section }}
+{
+    $this->{{ propertyName }} = ${{ propertyName }};
+    return $this;
+}
