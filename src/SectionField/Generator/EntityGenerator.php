@@ -32,7 +32,21 @@ class EntityGenerator extends Generator implements GeneratorInterface
     /** @var array */
     private $templates;
 
+    /** @var array */
+    private $prePersistInfo = [];
+
+    /** @var array */
+    private $preUpdateInfo = [];
+
     const GENERATE_FOR = 'entity';
+
+    const USE_TEMPLATE_VAR = 'use';
+    const PROPERTIES_TEMPLATE_VAR = 'properties';
+    const CONSTRUCTOR_TEMPLATE_VAR = 'constructor';
+    const METHODS_TEMPLATE_VAR = 'methods';
+    const PRE_PERSIST_TEMPLATE_VAR = 'prePersist';
+    const PRE_UPDATE_TEMPLATE_VAR = 'preUpdate';
+
     public function generateBySection(
         SectionInterface $section
     ): Writable {
@@ -49,6 +63,8 @@ class EntityGenerator extends Generator implements GeneratorInterface
         });
 
         $this->generateElements($fields);
+        $this->orderPrePersist();
+        $this->orderPreUpdate();
 
         return Writable::create(
             (string) $this->generateEntity(),
@@ -92,7 +108,25 @@ class EntityGenerator extends Generator implements GeneratorInterface
                             $field,
                             'sexy-field-entity'
                         ));
-                        $this->templates[$item][] = $generator::generate($field, $templateDir, $options);
+                        $generated = $generator::generate($field, $templateDir, $options);
+
+                        switch ($item) {
+                            case self::PRE_PERSIST_TEMPLATE_VAR:
+                                $this->prePersistInfo[] = [
+                                    'generated' => $generated,
+                                    'config' => $field->getConfig()->getGeneratorConfig()->toArray()
+                                ];
+                                break;
+                            case self::PRE_UPDATE_TEMPLATE_VAR:
+                                $this->preUpdateInfo[] = [
+                                    'generated' => $generated,
+                                    'config' => $field->getConfig()->getGeneratorConfig()->toArray()
+                                ];
+                                break;
+                            default:
+                                $this->templates[$item][] = $generated;
+                                break;
+                        }
                     } catch (\Exception $exception) {
                         $this->buildMessages[] = $exception->getMessage();
                     }
@@ -103,15 +137,65 @@ class EntityGenerator extends Generator implements GeneratorInterface
         }
     }
 
+    private function orderPrePersist(): void
+    {
+        foreach ($this->prePersistInfo as &$info) {
+            if (!empty($info['config'][self::GENERATE_FOR]) &&
+                isset($info['config'][self::GENERATE_FOR]['prePersistOrder']) &&
+                is_numeric($info['config'][self::GENERATE_FOR]['prePersistOrder'])
+            ) {
+                $info['config'][self::GENERATE_FOR]['prePersistOrder'] =
+                    (int) $info['config'][self::GENERATE_FOR]['prePersistOrder'];
+            } else {
+                $info['config'][self::GENERATE_FOR]['prePersistOrder'] = 999999999;
+            }
+        }
+
+        usort($this->prePersistInfo, function($a, $b) {
+            return
+                $a['config'][self::GENERATE_FOR]['prePersistOrder'] <=>
+                $b['config'][self::GENERATE_FOR]['prePersistOrder'];
+        });
+
+        foreach ($this->prePersistInfo as $info) {
+            $this->templates[self::PRE_PERSIST_TEMPLATE_VAR][] = $info['generated'];
+        }
+    }
+
+    private function orderPreUpdate(): void
+    {
+        foreach ($this->preUpdateInfo as &$info) {
+            if (!empty($info['config'][self::GENERATE_FOR]) &&
+                isset($info['config'][self::GENERATE_FOR]['preUpdateOrder']) &&
+                is_numeric($info['config'][self::GENERATE_FOR]['preUpdateOrder'])
+            ) {
+                $info['config'][self::GENERATE_FOR]['preUpdateOrder'] =
+                    (int) $info['config'][self::GENERATE_FOR]['prePersistOrder'];
+            } else {
+                $info['config'][self::GENERATE_FOR]['preUpdateOrder'] = 999999999;
+            }
+        }
+
+        usort($this->preUpdateInfo, function($a, $b) {
+            return
+                $a['config'][self::GENERATE_FOR]['preUpdateOrder'] <=>
+                $b['config'][self::GENERATE_FOR]['preUpdateOrder'];
+        });
+
+        foreach ($this->preUpdateInfo as $info) {
+            $this->templates[self::PRE_UPDATE_TEMPLATE_VAR][] = $info['generated'];
+        }
+    }
+
     private function initializeTemplates(): void
     {
         $this->templates = [
-            'use' => [],
-            'properties' => [],
-            'constructor' => [],
-            'methods' => [],
-            'prePersist' => [],
-            'preUpdate' => []
+            self::USE_TEMPLATE_VAR => [],
+            self::PROPERTIES_TEMPLATE_VAR => [],
+            self::CONSTRUCTOR_TEMPLATE_VAR => [],
+            self::METHODS_TEMPLATE_VAR => [],
+            self::PRE_PERSIST_TEMPLATE_VAR => [],
+            self::PRE_UPDATE_TEMPLATE_VAR => []
         ];
     }
 
