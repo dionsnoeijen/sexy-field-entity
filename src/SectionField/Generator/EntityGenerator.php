@@ -57,7 +57,6 @@ class EntityGenerator extends Generator implements GeneratorInterface
         $this->initializeTemplates();
 
         $fields = $this->fieldManager->readByHandles($this->sectionConfig->getFields());
-        $fields = $this->addOpposingRelationships($section, $fields);
 
         usort($fields, function(FieldInterface $a, FieldInterface $b) {
             return $a->getHandle() <=> $b->getHandle();
