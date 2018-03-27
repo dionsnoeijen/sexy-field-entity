@@ -1,3 +1,3 @@
-if (!empty($this->{{ propertyName }})) {
+if (empty($this->{{ propertyName }})) {
 	$this->{{ propertyName }} = Tardigrades\FieldType\Uuid\Helper\UuidV4::get();
 }
