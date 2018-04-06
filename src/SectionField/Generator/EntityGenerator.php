@@ -77,6 +77,16 @@ class EntityGenerator extends Generator implements GeneratorInterface
     {
         /** @var FieldInterface $field */
         foreach ($fields as $field) {
+
+            // First see if this field is to be ignored by this generator
+            try {
+                $fieldConfig = $field->getConfig()->getGeneratorConfig()->toArray();
+                if (!empty($fieldConfig[self::GENERATE_FOR]['ignore']) ||
+                    $fieldConfig[self::GENERATE_FOR]['ignore']) {
+                    continue;
+                }
+            } catch (\Exception $exception) {}
+
             $parsed = $this->getFieldTypeGeneratorConfig($field, self::GENERATE_FOR);
 
             /**
@@ -97,6 +107,7 @@ class EntityGenerator extends Generator implements GeneratorInterface
                     try {
                         $reflector = new ReflectionClass($generator);
                         $method = $reflector->getMethod('generate');
+
                         $options = [];
                         if (isset($method->getParameters()[1])) {
                             $options = [
@@ -114,13 +125,13 @@ class EntityGenerator extends Generator implements GeneratorInterface
                             case self::PRE_PERSIST_TEMPLATE_VAR:
                                 $this->prePersistInfo[] = [
                                     'generated' => $generated,
-                                    'config' => $field->getConfig()->getGeneratorConfig()->toArray()
+                                    'config' => $fieldConfig
                                 ];
                                 break;
                             case self::PRE_UPDATE_TEMPLATE_VAR:
                                 $this->preUpdateInfo[] = [
                                     'generated' => $generated,
-                                    'config' => $field->getConfig()->getGeneratorConfig()->toArray()
+                                    'config' => $fieldConfig
                                 ];
                                 break;
                             default:
