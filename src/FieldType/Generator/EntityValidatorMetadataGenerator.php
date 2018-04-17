@@ -39,9 +39,12 @@ class EntityValidatorMetadataGenerator implements GeneratorInterface
             foreach ($generatorConfig['entity']['validator'] as $assertion => $assertionOptions) {
                 $asString = str_replace('{{ assertion }}', $assertion, $asString);
                 $options = '';
-                foreach ($assertionOptions as $optionKey => $optionValue) {
-                    $options .= "'{$optionKey}' => '{$optionValue}',";
+                if (is_array($assertionOptions)) {
+                    foreach ($assertionOptions as $optionKey => $optionValue) {
+                        $options .= "'{$optionKey}' => '{$optionValue}',";
+                    }
                 }
+
                 if (!empty($options)) {
                     $options = rtrim($options, ',');
                     $options = "[{$options}]";
