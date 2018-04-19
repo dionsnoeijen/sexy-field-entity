@@ -239,6 +239,9 @@ EOT;
         return <<<EOT
 public function getDefault(): string
 {
+    if (\$this->{$defaultField} === null) {
+        throw new \UnexpectedValueException("{$defaultField} should not be null");
+    }
     return \$this->{$defaultField};
 }
 EOT;
