@@ -30,6 +30,7 @@ final class EntityMethodsGeneratorTest extends TestCase
                     'name' => 'iets',
                     'handle' => 'niets',
                     'kind' => 'one-to-many',
+                    'relationship-type' => 'bidirectional',
                     'entityEvents' => ['1', '2'],
                     'to' => 'me'
                 ]
@@ -78,6 +79,7 @@ EOT
                     'name' => 'iets',
                     'handle' => 'niets',
                     'kind' => 'many-to-many',
+                    'relationship-type' => 'bidirectional',
                     'entityEvents' => ['1', '2'],
                     'to' => 'me',
                     'as' => 'somethingElse'
@@ -127,6 +129,7 @@ EOT
                     'name' => 'iets',
                     'handle' => 'niets',
                     'kind' => 'many-to-one',
+                    'relationship-type' => 'bidirectional',
                     'entityEvents' => ['1', '2'],
                     'to' => 'me'
                 ]
@@ -174,6 +177,7 @@ EOT
                     'name' => 'iets',
                     'handle' => 'niets',
                     'kind' => 'one-to-one',
+                    'relationship-type' => 'unidirectional',
                     'entityEvents' => ['1', '2'],
                     'to' => 'me'
                 ]
@@ -195,7 +199,6 @@ public function setMe(Me $me): {{ section }}
         return $this;
     }
     $this->me = $me;
-    $me->setMyClass($this);
 
     return $this;
 }
@@ -205,9 +208,7 @@ public function removeMe(): {{ section }}
     if ($this->me === null) {
         return $this;
     }
-    $me = $this->me;
     $this->me = null;
-    $me->removeMyClass();
 
     return $this;
 }

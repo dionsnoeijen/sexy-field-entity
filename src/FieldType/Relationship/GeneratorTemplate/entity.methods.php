@@ -10,9 +10,9 @@ public function add<?php echo $methodName; ?>(<?php echo $entity; ?> $<?php echo
         return $this;
     }
     $this-><?php echo $pluralPropertyName; ?>->add($<?php echo $propertyName; ?>);
-<?php if ($kind === 'one-to-many') { ?>
+<?php if ($kind === 'one-to-many' && $type === 'bidirectional') { ?>
     $<?php echo $propertyName; ?>->set<?php echo $thatMethodName; ?>($this);
-<?php } elseif ($kind === 'many-to-many') { ?>
+<?php } elseif ($kind === 'many-to-many' && $type === 'bidirectional') { ?>
     $<?php echo $propertyName; ?>->add<?php echo $thatMethodName; ?>($this);
 <?php } ?>
 
@@ -25,9 +25,9 @@ public function remove<?php echo $methodName; ?>(<?php echo $entity; ?> $<?php e
         return $this;
     }
     $this-><?php echo $pluralPropertyName; ?>->removeElement($<?php echo $propertyName; ?>);
-<?php if ($kind === 'one-to-many') { ?>
+<?php if ($kind === 'one-to-many' && $type === 'bidirectional') { ?>
     $<?php echo $propertyName; ?>->remove<?php echo $thatMethodName; ?>();
-<?php } elseif ($kind === 'many-to-many') {?>
+<?php } elseif ($kind === 'many-to-many' && $type === 'bidirectional') {?>
     $<?php echo $propertyName; ?>->remove<?php echo $thatMethodName; ?>($this);
 <?php } ?>
 
@@ -52,9 +52,9 @@ public function set<?php echo $methodName; ?>(<?php echo $entity; ?> $<?php echo
         return $this;
     }
     $this-><?php echo $propertyName; ?> = $<?php echo $propertyName; ?>;
-<?php if ($kind === 'many-to-one') { ?>
+<?php if ($kind === 'many-to-one' && $type === 'bidirectional') { ?>
     $<?php echo $propertyName; ?>->add<?php echo $thatMethodName; ?>($this);
-<?php } elseif ($kind === 'one-to-one') { ?>
+<?php } elseif ($kind === 'one-to-one' && $type === 'bidirectional') { ?>
     $<?php echo $propertyName; ?>->set<?php echo $thatMethodName; ?>($this);
 <?php } ?>
 
@@ -66,11 +66,13 @@ public function remove<?php echo $methodName; ?>(): {{ section }}
     if ($this-><?php echo $propertyName; ?> === null) {
         return $this;
     }
+<?php if ($type === 'bidirectional') { ?>
     $<?php echo $propertyName; ?> = $this-><?php echo $propertyName; ?>;
+<?php } ?>
     $this-><?php echo $propertyName; ?> = null;
-<?php if ($kind === 'many-to-one') { ?>
+<?php if ($kind === 'many-to-one' && $type === 'bidirectional') { ?>
     $<?php echo $propertyName; ?>->remove<?php echo $thatMethodName; ?>($this);
-<?php } elseif ($kind === 'one-to-one') {?>
+<?php } elseif ($kind === 'one-to-one' && $type === 'bidirectional') {?>
     $<?php echo $propertyName; ?>->remove<?php echo $thatMethodName; ?>();
 <?php } ?>
 
