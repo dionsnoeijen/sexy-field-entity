@@ -131,7 +131,8 @@ EOT
                     'kind' => 'many-to-one',
                     'relationship-type' => 'bidirectional',
                     'entityEvents' => ['1', '2'],
-                    'to' => 'me'
+                    'to' => 'me',
+                    'from-handle' => 'ParticularMyClass'
                 ]
             ],
             <<<'EOT'
@@ -151,7 +152,7 @@ public function setMe(Me $me): {{ section }}
         return $this;
     }
     $this->me = $me;
-    $me->addMyClass($this);
+    $me->addParticularMyClass($this);
 
     return $this;
 }
@@ -163,7 +164,7 @@ public function removeMe(): {{ section }}
     }
     $me = $this->me;
     $this->me = null;
-    $me->removeMyClass($this);
+    $me->removeParticularMyClass($this);
 
     return $this;
 }
