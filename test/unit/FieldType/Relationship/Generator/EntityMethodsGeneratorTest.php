@@ -162,6 +162,7 @@ public function removeMe(): {{ section }}
     if ($this->me === null) {
         return $this;
     }
+    /** @var Me */
     $me = $this->me;
     $this->me = null;
     $me->removeParticularMyClass($this);
