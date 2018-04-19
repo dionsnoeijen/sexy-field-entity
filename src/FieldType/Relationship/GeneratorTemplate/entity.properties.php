@@ -4,6 +4,6 @@ protected $<?php echo $pluralPropertyName; ?>;
 <?php } ?>
 
 <?php if ($kind === 'many-to-one' || $kind === 'one-to-one') { ?>
-/** @var <?php echo $entity; ?> */
+/** @var ?<?php echo $entity; ?> */
 protected $<?php echo $propertyName; ?>;
 <?php } ?>
