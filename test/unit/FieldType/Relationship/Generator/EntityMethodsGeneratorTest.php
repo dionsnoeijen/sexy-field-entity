@@ -24,30 +24,17 @@ final class EntityMethodsGeneratorTest extends TestCase
      */
     public function it_generates()
     {
-        $mockedFieldInterface = Mockery::mock(new Field())->makePartial();
-        $mockedSectionConfig = Mockery::mock('alias:SectionConfig')->makePartial();
-        $templateDir = TemplateDir::fromString('src/FieldType/Relationship');
-
-        $mockedFieldInterface->shouldReceive('getConfig')
-            ->andReturn(
-                FieldConfig::fromArray(
-                    [
-                        'field' => [
-                            'name' => 'iets',
-                            'handle' => 'niets',
-                            'kind' => 'one-to-many',
-                            'entityEvents' => ['1', '2'],
-                            'to' => 'me'
-                        ]
-                    ]
-                )
-            );
-
-        $mockedSectionConfig->shouldReceive('getClassName')
-            ->andReturn('MyClass');
-
-        $options = ['sectionConfig' => $mockedSectionConfig];
-        $expected = <<<'EOT'
+        $this->compareOutput(
+            [
+                'field' => [
+                    'name' => 'iets',
+                    'handle' => 'niets',
+                    'kind' => 'one-to-many',
+                    'entityEvents' => ['1', '2'],
+                    'to' => 'me'
+                ]
+            ],
+            <<<'EOT'
 public function getMes(): ?Collection
 {
     return $this->mes;
@@ -59,8 +46,8 @@ public function addMe(Me $me): {{ section }}
         return $this;
     }
     $this->mes->add($me);
-        $me->setMyClass($this);
-        
+    $me->setMyClass($this);
+
     return $this;
 }
 
@@ -70,17 +57,13 @@ public function removeMe(Me $me): {{ section }}
         return $this;
     }
     $this->mes->removeElement($me);
-        $me->removeMyClass($this);
-    
+    $me->removeMyClass();
+
     return $this;
 }
 
-
-EOT;
-
-        $generatedTemplate = EntityMethodsGenerator::generate($mockedFieldInterface, $templateDir, $options);
-        $this->assertInstanceOf(Template::class, $generatedTemplate);
-        $this->assertSame($expected, (string)$generatedTemplate);
+EOT
+        );
     }
 
     /**
@@ -89,31 +72,18 @@ EOT;
      */
     public function it_generates_using_field_aliases_in_relationship()
     {
-        $mockedFieldInterface = Mockery::mock(new Field())->makePartial();
-        $mockedSectionConfig = Mockery::mock('alias:SectionConfig')->makePartial();
-        $templateDir = TemplateDir::fromString('src/FieldType/Relationship');
-
-        $mockedFieldInterface->shouldReceive('getConfig')
-            ->andReturn(
-                FieldConfig::fromArray(
-                    [
-                        'field' => [
-                            'name' => 'iets',
-                            'handle' => 'niets',
-                            'kind' => 'one-to-many',
-                            'entityEvents' => ['1', '2'],
-                            'to' => 'me',
-                            'as' => 'somethingElse'
-                        ]
-                    ]
-                )
-            );
-
-        $mockedSectionConfig->shouldReceive('getClassName')
-            ->andReturn('MyClass');
-
-        $options = ['sectionConfig' => $mockedSectionConfig];
-        $expected = <<<'EOT'
+        $this->compareOutput(
+            [
+                'field' => [
+                    'name' => 'iets',
+                    'handle' => 'niets',
+                    'kind' => 'many-to-many',
+                    'entityEvents' => ['1', '2'],
+                    'to' => 'me',
+                    'as' => 'somethingElse'
+                ]
+            ],
+            <<<'EOT'
 public function getSomethingElses(): ?Collection
 {
     return $this->somethingElses;
@@ -125,8 +95,8 @@ public function addSomethingElse(Me $somethingElse): {{ section }}
         return $this;
     }
     $this->somethingElses->add($somethingElse);
-        $somethingElse->setMyClass($this);
-        
+    $somethingElse->addMyClass($this);
+
     return $this;
 }
 
@@ -136,13 +106,127 @@ public function removeSomethingElse(Me $somethingElse): {{ section }}
         return $this;
     }
     $this->somethingElses->removeElement($somethingElse);
-        $somethingElse->removeMyClass($this);
-    
+    $somethingElse->removeMyClass($this);
+
     return $this;
 }
 
+EOT
+        );
+    }
 
-EOT;
+    /**
+     * @test
+     * @covers ::generate
+     */
+    public function it_generates_other_relationship_kinds()
+    {
+        $this->compareOutput(
+            [
+                'field' => [
+                    'name' => 'iets',
+                    'handle' => 'niets',
+                    'kind' => 'many-to-one',
+                    'entityEvents' => ['1', '2'],
+                    'to' => 'me'
+                ]
+            ],
+            <<<'EOT'
+public function getMe(): ?Me
+{
+    return $this->me;
+}
+
+public function hasMe(): bool
+{
+    return !empty($this->me);
+}
+
+public function setMe(Me $me): {{ section }}
+{
+    if ($this->me === $me) {
+        return $this;
+    }
+    $this->me = $me;
+    $me->addMyClass($this);
+
+    return $this;
+}
+
+public function removeMe(): {{ section }}
+{
+    if ($this->me === null) {
+        return $this;
+    }
+    $this->me = null;
+    $me->removeMyClass($this);
+
+    return $this;
+}
+
+EOT
+        );
+
+        $this->compareOutput(
+            [
+                'field' => [
+                    'name' => 'iets',
+                    'handle' => 'niets',
+                    'kind' => 'one-to-one',
+                    'entityEvents' => ['1', '2'],
+                    'to' => 'me'
+                ]
+            ],
+            <<<'EOT'
+public function getMe(): ?Me
+{
+    return $this->me;
+}
+
+public function hasMe(): bool
+{
+    return !empty($this->me);
+}
+
+public function setMe(Me $me): {{ section }}
+{
+    if ($this->me === $me) {
+        return $this;
+    }
+    $this->me = $me;
+    $me->setMyClass($this);
+
+    return $this;
+}
+
+public function removeMe(): {{ section }}
+{
+    if ($this->me === null) {
+        return $this;
+    }
+    $this->me = null;
+    $me->removeMyClass();
+
+    return $this;
+}
+
+EOT
+        );
+    }
+
+    private function compareOutput($config, $expected)
+    {
+        $mockedFieldInterface = Mockery::mock(new Field())->makePartial();
+        $mockedSectionConfig = Mockery::mock('alias:SectionConfig')->makePartial();
+        $templateDir = TemplateDir::fromString(__DIR__ . '/../../../../../src/FieldType/Relationship');
+
+        $mockedFieldInterface->shouldReceive('getConfig')
+            ->andReturn(FieldConfig::fromArray($config));
+
+        $mockedSectionConfig->shouldReceive('getClassName')
+            ->andReturn('MyClass');
+
+        $options = ['sectionConfig' => $mockedSectionConfig];
 
         $generatedTemplate = EntityMethodsGenerator::generate($mockedFieldInterface, $templateDir, $options);
         $this->assertInstanceOf(Template::class, $generatedTemplate);

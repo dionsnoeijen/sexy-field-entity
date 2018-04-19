@@ -10,12 +10,11 @@ public function add<?php echo $methodName; ?>(<?php echo $entity; ?> $<?php echo
         return $this;
     }
     $this-><?php echo $pluralPropertyName; ?>->add($<?php echo $propertyName; ?>);
-    <?php if ($kind === 'one-to-many') { ?>
+<?php if ($kind === 'one-to-many') { ?>
     $<?php echo $propertyName; ?>->set<?php echo $thatMethodName; ?>($this);
-    <?php } ?>
-    <?php if ($kind === 'many-to-many') { ?>
+<?php } elseif ($kind === 'many-to-many') { ?>
     $<?php echo $propertyName; ?>->add<?php echo $thatMethodName; ?>($this);
-    <?php } ?>
+<?php } ?>
 
     return $this;
 }
@@ -26,15 +25,17 @@ public function remove<?php echo $methodName; ?>(<?php echo $entity; ?> $<?php e
         return $this;
     }
     $this-><?php echo $pluralPropertyName; ?>->removeElement($<?php echo $propertyName; ?>);
-    <?php if ($kind === 'one-to-many') { ?>
+<?php if ($kind === 'one-to-many') { ?>
+    $<?php echo $propertyName; ?>->remove<?php echo $thatMethodName; ?>();
+<?php } elseif ($kind === 'many-to-many') {?>
     $<?php echo $propertyName; ?>->remove<?php echo $thatMethodName; ?>($this);
-    <?php } ?>
+<?php } ?>
 
     return $this;
 }
-<?php } ?>
+<?php }
 
-<?php if ($kind === 'many-to-one' || $kind === 'one-to-one') { ?>
+if ($kind === 'many-to-one' || $kind === 'one-to-one') { ?>
 public function get<?php echo $methodName; ?>(): ?<?php echo $entity . PHP_EOL; ?>
 {
     return $this-><?php echo $propertyName; ?>;
@@ -47,15 +48,31 @@ public function has<?php echo $methodName; ?>(): bool
 
 public function set<?php echo $methodName; ?>(<?php echo $entity; ?> $<?php echo $propertyName; ?>): {{ section }}
 {
+    if ($this-><?php echo $propertyName; ?> === $<?php echo $propertyName; ?>) {
+        return $this;
+    }
     $this-><?php echo $propertyName; ?> = $<?php echo $propertyName; ?>;
+<?php if ($kind === 'many-to-one') { ?>
+    $<?php echo $propertyName; ?>->add<?php echo $thatMethodName; ?>($this);
+<?php } elseif ($kind === 'one-to-one') { ?>
+    $<?php echo $propertyName; ?>->set<?php echo $thatMethodName; ?>($this);
+<?php } ?>
 
     return $this;
 }
 
 public function remove<?php echo $methodName; ?>(): {{ section }}
 {
+    if ($this-><?php echo $propertyName; ?> === null) {
+        return $this;
+    }
     $this-><?php echo $propertyName; ?> = null;
+<?php if ($kind === 'many-to-one') { ?>
+    $<?php echo $propertyName; ?>->remove<?php echo $thatMethodName; ?>($this);
+<?php } elseif ($kind === 'one-to-one') {?>
+    $<?php echo $propertyName; ?>->remove<?php echo $thatMethodName; ?>();
+<?php } ?>
 
     return $this;
 }
-<?php } ?>
+<?php }
