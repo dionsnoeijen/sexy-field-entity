@@ -31,7 +31,11 @@ class EntityMethodsGenerator implements GeneratorInterface
         $sectionConfig = $options[0]['sectionConfig'];
 
         $toHandle = $fieldConfig['field']['as'] ?? $fieldConfig['field']['to'];
-        $thatMethodName = $fieldConfig['field']['from-handle'] ?? $sectionConfig->getClassName();
+        if (isset($fieldConfig['field']['from-handle'])) {
+            $thatMethodName = ucfirst($fieldConfig['field']['from-handle']);
+        } else {
+            $thatMethodName = $sectionConfig->getClassName();
+        }
 
         return Template::create((string) TemplateLoader::load(
             (string) $templateDir .
