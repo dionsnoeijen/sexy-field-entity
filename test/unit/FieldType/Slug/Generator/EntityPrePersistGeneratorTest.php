@@ -50,15 +50,17 @@ class EntityPrePersistGeneratorTest extends TestCase
         $this->assertFalse((string)$generatedTemplate === '');
 
         $expected = <<<'EOT'
-// phpcs:ignore Generic.Files.LineLength
-if ($this->getSnail() === null) {
+$snail = $this->getSnail();
+if ($snail === null) {
     throw new \UnexpectedValueException('snail is null, cannot build slug');
 }
-if ($this->getSexy() === null) {
+$sexy = $this->getSexy();
+if ($sexy === null) {
     throw new \UnexpectedValueException('sexy is null, cannot build slug');
 }
 
-$this->niets = Tardigrades\Helper\StringConverter::toSlug($this->getSnail() . '-' . $this->getSexy()->format('Y-m-d'));
+// phpcs:ignore Generic.Files.LineLength
+$this->niets = Tardigrades\Helper\StringConverter::toSlug($snail . '-' . $sexy->format('Y-m-d'));
 
 EOT;
 

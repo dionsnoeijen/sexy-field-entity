@@ -63,7 +63,7 @@ class EntityPrePersistGenerator implements GeneratorInterface
         $assignment = [];
         foreach ($slug->toArray() as $element) {
             $element = explode('|', $element);
-            $value = '$this->get' . Inflector::classify($element[0]) . '()';
+            $value = "\$$element[0]";
             if (count($element) > 1) {
                 switch ($element[1]) {
                     case 'DateTime':
@@ -81,9 +81,10 @@ class EntityPrePersistGenerator implements GeneratorInterface
         $body = '';
         foreach ($slug->toArray() as $element) {
             $element = explode('|', $element);
-            $value = '$this->get' . Inflector::classify($element[0]) . '()';
+            $getter = '$this->get' . Inflector::classify($element[0]) . '()';
             $body .= <<<EOT
-if ($value === null) {
+\$$element[0] = $getter;
+if (\$$element[0] === null) {
     throw new \UnexpectedValueException('$element[0] is null, cannot build slug');
 }
 
