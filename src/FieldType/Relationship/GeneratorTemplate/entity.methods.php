@@ -67,7 +67,7 @@ public function remove<?php echo $methodName; ?>(): {{ section }}
         return $this;
     }
 <?php if ($type === 'bidirectional') { ?>
-    /** @var <?php echo $entity; ?> */
+    /** @var <?php echo $entity; ?> $<?php echo $propertyName; ?> */
     $<?php echo $propertyName; ?> = $this-><?php echo $propertyName; ?>;
 <?php } ?>
     $this-><?php echo $propertyName; ?> = null;
