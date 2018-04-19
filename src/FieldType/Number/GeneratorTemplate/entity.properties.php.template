@@ -1,2 +1,2 @@
-/** @var {{ nullable }}float */
+/** @var ?float */
 protected ${{ propertyName }};

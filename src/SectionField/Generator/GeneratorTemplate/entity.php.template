@@ -13,7 +13,7 @@ class {{ section }} implements CommonSectionInterface
 {
     {{ properties }}
 
-    /** @var int */
+    /** @var ?int */
     private $id;
 
     public function __construct()
