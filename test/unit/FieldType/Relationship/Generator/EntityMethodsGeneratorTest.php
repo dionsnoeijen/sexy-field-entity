@@ -158,6 +158,7 @@ public function removeMe(): {{ section }}
     if ($this->me === null) {
         return $this;
     }
+    $me = $this->me;
     $this->me = null;
     $me->removeMyClass($this);
 
@@ -204,6 +205,7 @@ public function removeMe(): {{ section }}
     if ($this->me === null) {
         return $this;
     }
+    $me = $this->me;
     $this->me = null;
     $me->removeMyClass();
 

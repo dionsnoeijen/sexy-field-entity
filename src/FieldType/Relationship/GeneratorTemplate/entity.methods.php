@@ -66,6 +66,7 @@ public function remove<?php echo $methodName; ?>(): {{ section }}
     if ($this-><?php echo $propertyName; ?> === null) {
         return $this;
     }
+    $<?php echo $propertyName; ?> = $this-><?php echo $propertyName; ?>;
     $this-><?php echo $propertyName; ?> = null;
 <?php if ($kind === 'many-to-one') { ?>
     $<?php echo $propertyName; ?>->remove<?php echo $thatMethodName; ?>($this);
