@@ -227,7 +227,7 @@ class EntityGenerator extends Generator implements GeneratorInterface
 public function getSlug(): Tardigrades\SectionField\ValueObject\Slug
 {
     if (\$this->{$slugField} === null) {
-        throw new \UnexpectedValueException('\$this->{$slugField} is null, cannot build slug');
+        throw new \UnexpectedValueException('\$this->{$slugField} is null, no slug built');
     }
     return Tardigrades\SectionField\ValueObject\Slug::fromString(\$this->{$slugField});
 }
@@ -243,7 +243,7 @@ EOT;
 public function getDefault(): string
 {
     if (\$this->{$defaultField} === null) {
-        throw new \UnexpectedValueException('\$this->{$defaultField} is null, cannot get default value');
+        throw new \UnexpectedValueException('{$defaultField} is null, cannot get default value');
     }
     return \$this->{$defaultField};
 }

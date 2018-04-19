@@ -23,7 +23,7 @@ class EntityPrePersistGeneratorTest extends TestCase
     public function it_should_generate()
     {
         $mockedFieldInterface = Mockery::mock(new Field())->makePartial();
-        $templateDir = TemplateDir::fromString('src/FieldType/Slug');
+        $templateDir = TemplateDir::fromString(__DIR__ . '/../../../../../src/FieldType/Slug');
 
         $mockedFieldInterface->shouldReceive('getConfig')
             ->andReturn(
@@ -49,11 +49,19 @@ class EntityPrePersistGeneratorTest extends TestCase
         $this->assertInstanceOf(Template::class, $generatedTemplate);
         $this->assertFalse((string)$generatedTemplate === '');
 
-        // @codingStandardsIgnoreStart
-        $this->assertContains(
-            '$this->niets = Tardigrades\Helper\StringConverter::toSlug($this->getSnail() . \'-\' . $this->getSexy()->format(\'Y-m-d\'));',
-            (string) $generatedTemplate
-        );
-        // @codingStandardsIgnoreEnd
+        $expected = <<<'EOT'
+// phpcs:ignore Generic.Files.LineLength
+if ($this->getSnail() === null) {
+    throw new \UnexpectedValueException('snail is null, cannot build slug');
+}
+if ($this->getSexy() === null) {
+    throw new \UnexpectedValueException('sexy is null, cannot build slug');
+}
+
+$this->niets = Tardigrades\Helper\StringConverter::toSlug($this->getSnail() . '-' . $this->getSexy()->format('Y-m-d'));
+
+EOT;
+
+        $this->assertSame($expected, (string)$generatedTemplate);
     }
 }
