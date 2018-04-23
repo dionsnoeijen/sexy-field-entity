@@ -1,2 +1,3 @@
+{{ verification }}
 // phpcs:ignore Generic.Files.LineLength
 $this->{{ propertyName }} = {{ assignment }}

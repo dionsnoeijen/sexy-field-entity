@@ -39,13 +39,19 @@ class EntityPrePersistGenerator implements GeneratorInterface
             $asString
         );
 
+        $slug = SlugValueObject::create(
+            $field->getConfig()->getGeneratorConfig()->toArray()['entity']['slugFields']
+        );
+
+        $asString = str_replace(
+            '{{ verification }}',
+            self::makeSlugVerification($slug),
+            $asString
+        );
+
         $asString = str_replace(
             '{{ assignment }}',
-            self::makeSlugAssignment(
-                SlugValueObject::create(
-                    $field->getConfig()->getGeneratorConfig()->toArray()['entity']['slugFields']
-                )
-            ),
+            self::makeSlugAssignment($slug),
             $asString
         );
 
@@ -57,16 +63,33 @@ class EntityPrePersistGenerator implements GeneratorInterface
         $assignment = [];
         foreach ($slug->toArray() as $element) {
             $element = explode('|', $element);
-            $attach = '';
+            $value = "\$$element[0]";
             if (count($element) > 1) {
                 switch ($element[1]) {
                     case 'DateTime':
-                        $attach = '->format(\'' . $element[2] . '\')';
+                        $value .= "->format('$element[2]')";
                         break;
                 }
             }
-            $assignment[] = '$this->get' . Inflector::classify($element[0]) . '()' . $attach;
+            $assignment[] = $value;
         }
-        return 'Tardigrades\Helper\StringConverter::toSlug(' . implode(' . \'-\' . ', $assignment) . ');';
+        return 'Tardigrades\Helper\StringConverter::toSlug(' . implode(" . '-' . ", $assignment) . ');';
+    }
+
+    private static function makeSlugVerification(SlugValueObject $slug): string
+    {
+        $body = '';
+        foreach ($slug->toArray() as $element) {
+            $element = explode('|', $element);
+            $getter = '$this->get' . Inflector::classify($element[0]) . '()';
+            $body .= <<<EOT
+\$$element[0] = $getter;
+if (\$$element[0] === null) {
+    throw new \UnexpectedValueException('$element[0] is null, cannot build slug');
+}
+
+EOT;
+        }
+        return $body;
     }
 }
