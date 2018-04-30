@@ -15,17 +15,7 @@
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
             <exclude>
-                <directory suffix=".php">./src/FieldType/Choice/GeneratorTemplate</directory>
-                <directory suffix=".php">./src/FieldType/DateTime/GeneratorTemplate</directory>
-                <directory suffix=".php">./src/FieldType/Email/GeneratorTemplate</directory>
-                <directory suffix=".php">./src/FieldType/Generator/GeneratorTemplate</directory>
-                <directory suffix=".php">./src/FieldType/Integer/GeneratorTemplate</directory>
-                <directory suffix=".php">./src/FieldType/Number/GeneratorTemplate</directory>
                 <directory suffix=".php">./src/FieldType/Relationship/GeneratorTemplate</directory>
-                <directory suffix=".php">./src/FieldType/RichTextArea/GeneratorTemplate</directory>
-                <directory suffix=".php">./src/FieldType/TextArea/GeneratorTemplate</directory>
-                <directory suffix=".php">./src/FieldType/TextInput/GeneratorTemplate</directory>
-                <directory suffix=".php">./src/FieldType/Uuid/GeneratorTemplate</directory>directory>
             </exclude>
         </whitelist>
     </filter>

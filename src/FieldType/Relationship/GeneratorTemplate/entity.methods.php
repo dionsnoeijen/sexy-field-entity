@@ -36,11 +36,8 @@ public function remove<?php echo $methodName; ?>(<?php echo $entity; ?> $<?php e
 <?php }
 
 if ($kind === 'many-to-one' || $kind === 'one-to-one') { ?>
-public function get<?php echo $methodName; ?>(): <?php echo $entity . PHP_EOL; ?>
+public function get<?php echo $methodName; ?>(): ?<?php echo $entity . PHP_EOL; ?>
 {
-    if (is_null($this-><?php echo $propertyName; ?>)) {
-        throw new \UnexpectedValueException("Property <?php echo $propertyName; ?> can not be null");
-    }
     return $this-><?php echo $propertyName; ?>;
 }
 

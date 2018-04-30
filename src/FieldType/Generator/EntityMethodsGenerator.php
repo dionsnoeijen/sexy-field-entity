@@ -17,11 +17,10 @@ use Tardigrades\Entity\FieldInterface;
 use Tardigrades\FieldType\ValueObject\Template;
 use Tardigrades\FieldType\ValueObject\TemplateDir;
 use Tardigrades\SectionField\Generator\Loader\TemplateLoader;
-use Tardigrades\SectionField\ValueObject\SectionConfig;
 
 class EntityMethodsGenerator implements GeneratorInterface
 {
-    public static function generate(FieldInterface $field, TemplateDir $templateDir, ...$options): Template
+    public static function generate(FieldInterface $field, TemplateDir $templateDir): Template
     {
         $nullable = true;
 
@@ -31,24 +30,12 @@ class EntityMethodsGenerator implements GeneratorInterface
             if (!$generatorConfig['entity']['validator']['NotBlank']) { //which means the yml tilde: use default value
                 $nullable = false;
             }
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
+            //
         }
-
-        try {
-            /** @var SectionConfig $sectionConfig */
-            $sectionConfig = $options[0]['sectionConfig'];
-
-            $generatorConfig = $sectionConfig->getGeneratorConfig()->toArray();
-
-            if (!$generatorConfig['entity'][(string)$field->getHandle()]['NotBlank']) {
-                $nullable = false;
-            }
-        } catch (\Throwable $e) {
-        }
-
+        
         $asString = (string) TemplateLoader::load(
-            (string) $templateDir . '/GeneratorTemplate/entity.methods.php',
-            ['nullable' => $nullable]
+            (string) $templateDir . '/GeneratorTemplate/entity.methods.php.template'
         );
 
         $asString = str_replace(
