@@ -36,10 +36,8 @@ class EntityValidatorMetadataGenerator implements GeneratorInterface
                 $field->getConfig()->getPropertyName(),
                 $asString
             );
-            $strings = [];
             foreach ($generatorConfig['entity']['validator'] as $assertion => $assertionOptions) {
-                $stringPiece = $asString;
-                $stringPiece = str_replace('{{ assertion }}', $assertion, $stringPiece);
+                $asString = str_replace('{{ assertion }}', $assertion, $asString);
                 $options = '';
                 if (is_array($assertionOptions)) {
                     foreach ($assertionOptions as $optionKey => $optionValue) {
@@ -51,10 +49,9 @@ class EntityValidatorMetadataGenerator implements GeneratorInterface
                     $options = rtrim($options, ',');
                     $options = "[{$options}]";
                 }
-                $stringPiece = str_replace('{{ assertionOptions }}', $options, $stringPiece);
-                $strings[] = $stringPiece;
+                $asString = str_replace('{{ assertionOptions }}', $options, $asString);
             }
-            return Template::create(implode("\n", $strings));
+            return Template::create($asString);
         }
 
         return Template::create('');
