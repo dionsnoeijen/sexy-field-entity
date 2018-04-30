@@ -136,8 +136,11 @@ EOT
                 ]
             ],
             <<<'EOT'
-public function getMe(): ?Me
+public function getMe(): Me
 {
+    if (is_null($this->me)) {
+        throw new \UnexpectedValueException("Property me can not be null");
+    }
     return $this->me;
 }
 
@@ -185,8 +188,11 @@ EOT
                 ]
             ],
             <<<'EOT'
-public function getMe(): ?Me
+public function getMe(): Me
 {
+    if (is_null($this->me)) {
+        throw new \UnexpectedValueException("Property me can not be null");
+    }
     return $this->me;
 }
 

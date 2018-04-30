@@ -14,15 +14,14 @@ use Tardigrades\FieldType\ValueObject\TemplateDir;
  */
 final class EntityMethodsGeneratorTest extends TestCase
 {
-    /**
-     * @test
-     * @covers ::generate
-     */
-    public function it_should_generate_when_property_is_not_nullable()
-    {
-        $body = <<<'EOT'
-public function get{{ methodName }}(): ?\DateTime
+    const TEMPLATE_BODY = <<<'EOT'
+public function get{{ methodName }}(): {{ nullable }}\DateTime
 {
+<?php if (!$nullable) { ?>
+    if (is_null($this->{{ propertyName }})) {
+        throw new \UnexpectedValueException("Property {{ propertyName }} can not be null");
+    }
+<?php } ?>
     return $this->{{ propertyName }};
 }
 
@@ -34,9 +33,15 @@ public function set{{ methodName }}({{ nullable }}\DateTime ${{ propertyName }})
 
 EOT;
 
+    /**
+     * @test
+     * @covers ::generate
+     */
+    public function it_should_generate_when_property_is_not_nullable()
+    {
         $structure = [
             'GeneratorTemplate' => [
-                'entity.methods.php.template' => $body
+                'entity.methods.php' => static::TEMPLATE_BODY
             ]
         ];
         vfsStream::setup('root', null, $structure);
@@ -58,8 +63,11 @@ EOT;
         ];
 
         $templateString = <<<'EOT'
-public function getBar(): ?\DateTime
+public function getBar(): \DateTime
 {
+    if (is_null($this->bar)) {
+        throw new \UnexpectedValueException("Property bar can not be null");
+    }
     return $this->bar;
 }
 
@@ -86,23 +94,9 @@ EOT;
      */
     public function it_should_generate_when_property_is_nullable()
     {
-        $body = <<<'EOT'
-public function get{{ methodName }}(): ?\DateTime
-{
-    return $this->{{ propertyName }};
-}
-
-public function set{{ methodName }}({{ nullable }}\DateTime ${{ propertyName }}): {{ section }}
-{
-    $this->{{ propertyName }} = ${{ propertyName }};
-    return $this;
-}
-
-EOT;
-
         $structure = [
             'GeneratorTemplate' => [
-                'entity.methods.php.template' => $body
+                'entity.methods.php' => static::TEMPLATE_BODY
             ]
         ];
         vfsStream::setup('root', null, $structure);
@@ -145,23 +139,9 @@ EOT;
      */
     public function it_should_generate_when_property_is_nullable_and_generator_has_other_config()
     {
-        $body = <<<'EOT'
-public function get{{ methodName }}(): ?\DateTime
-{
-    return $this->{{ propertyName }};
-}
-
-public function set{{ methodName }}({{ nullable }}\DateTime ${{ propertyName }}): {{ section }}
-{
-    $this->{{ propertyName }} = ${{ propertyName }};
-    return $this;
-}
-
-EOT;
-
         $structure = [
             'GeneratorTemplate' => [
-                'entity.methods.php.template' => $body
+                'entity.methods.php' => static::TEMPLATE_BODY
             ]
         ];
         vfsStream::setup('root', null, $structure);
