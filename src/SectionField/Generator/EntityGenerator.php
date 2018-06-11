@@ -13,6 +13,7 @@ declare (strict_types=1);
 
 namespace Tardigrades\SectionField\Generator;
 
+use Doctrine\Common\Util\Inflector;
 use ReflectionClass;
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\Entity\SectionInterface;
@@ -38,6 +39,9 @@ class EntityGenerator extends Generator implements GeneratorInterface
     /** @var array */
     private $preUpdateInfo;
 
+    /** @var array[] */
+    private $metadata = [];
+
     const GENERATE_FOR = 'entity';
 
     const USE_TEMPLATE_VAR = 'use';
@@ -62,6 +66,7 @@ class EntityGenerator extends Generator implements GeneratorInterface
             return $a->getHandle() <=> $b->getHandle();
         });
 
+        $this->metadata = [];
         $this->generateElements($fields);
         $this->orderPrePersist();
         $this->orderPreUpdate();
@@ -80,12 +85,54 @@ class EntityGenerator extends Generator implements GeneratorInterface
 
             // First see if this field is to be ignored by this generator
             try {
-                $fieldConfig = $field->getConfig()->getGeneratorConfig()->toArray();
-                if (!empty($fieldConfig[self::GENERATE_FOR]['ignore']) ||
-                    $fieldConfig[self::GENERATE_FOR]['ignore']) {
+                $generatorConfig = $field->getConfig()->getGeneratorConfig()->toArray();
+                if (!empty($generatorConfig[self::GENERATE_FOR]['ignore']) ||
+                    $generatorConfig[self::GENERATE_FOR]['ignore']) {
                     continue;
                 }
             } catch (\Exception $exception) {}
+
+            $fieldTypeClass = (string)$field->getFieldType()->getFullyQualifiedClassName()->getClassName();
+            $fieldConfig = $field->getConfig();
+            if ($fieldTypeClass === 'Relationship') {
+                $fieldConfigArray = $fieldConfig->toArray();
+                $singularPropertyName = $fieldConfigArray['field']['as'] ?? $fieldConfigArray['field']['to'];
+
+                $kind = $fieldConfigArray['field']['kind'];
+                if ($kind === 'one-to-many' || $kind === 'many-to-many') {
+                    $plural = true;
+                    $propertyName = Inflector::pluralize($singularPropertyName);
+                    $setter = 'add' . ucfirst($singularPropertyName);
+                } else {
+                    $plural = false;
+                    $propertyName = $singularPropertyName;
+                    $setter = 'set' . ucfirst($singularPropertyName);
+                }
+
+                $getter = 'get' . ucfirst($propertyName);
+
+                $targetClass = $this->getNamespace() . '\\' . ucfirst($fieldConfigArray['field']['to']);
+
+                $relationship = [
+                    'class' => $targetClass,
+                    'plural' => $plural,
+                    'kind' => $kind
+                ];
+            } else {
+                $propertyName = (string)$fieldConfig->getPropertyName();
+                $methodName = (string)$fieldConfig->getMethodName();
+                $getter = "get$methodName";
+                $setter = "set$methodName";
+                $relationship = null;
+            }
+
+            $this->metadata[$propertyName] = [
+                'handle' => (string)$field->getHandle(),
+                'type' => (string)$field->getFieldType()->getType(),
+                'getter' => $getter,
+                'setter' => $setter,
+                'relationship' => $relationship
+            ];
 
             $parsed = $this->getFieldTypeGeneratorConfig($field, self::GENERATE_FOR);
 
@@ -125,13 +172,13 @@ class EntityGenerator extends Generator implements GeneratorInterface
                             case self::PRE_PERSIST_TEMPLATE_VAR:
                                 $this->prePersistInfo[] = [
                                     'generated' => $generated,
-                                    'config' => $fieldConfig
+                                    'config' => $generatorConfig
                                 ];
                                 break;
                             case self::PRE_UPDATE_TEMPLATE_VAR:
                                 $this->preUpdateInfo[] = [
                                     'generated' => $generated,
-                                    'config' => $fieldConfig
+                                    'config' => $generatorConfig
                                 ];
                                 break;
                             default:
@@ -307,15 +354,43 @@ EOT;
         return $template;
     }
 
+    private function getNamespace(): string
+    {
+        return (string) $this->sectionConfig->getNamespace() . '\\Entity';
+    }
+
     private function insertNamespace(string $template): string
     {
         $template = str_replace(
             '{{ namespace }}',
-            (string) $this->sectionConfig->getNamespace() . '\\Entity',
+            $this->getNamespace(),
             $template
         );
 
         return $template;
+    }
+
+    private function insertFieldMetadata(string $template): string
+    {
+        $content = var_export($this->metadata, true);
+
+        // Modern array syntax
+        $content = str_replace('array (', '[', $content);
+        $content = str_replace(')', ']', $content);
+
+        // Better indentation
+        $content = preg_replace('/=> \\n */', '=> ', $content);
+        $content = str_replace('  ', '    ', $content);
+        $content = str_replace("\n", "\n    ", $content);
+
+        // PSR2-conforming null constant
+        $content = str_replace('=> NULL', '=> null', $content);
+
+        return str_replace(
+            '{{ metadata }}',
+            "    const FIELDS = $content;\n",
+            $template
+        );
     }
 
     private function insertValidationMetadata(string $template): string
@@ -395,7 +470,9 @@ EOT;
         $template = $this->insertSection($template);
         $template = $this->insertNamespace($template);
         $template = $this->insertValidationMetadata($template);
+        $template = PhpFormatter::format($template);
+        $template = $this->insertFieldMetadata($template);
 
-        return Template::create(PhpFormatter::format($template));
+        return Template::create($template);
     }
 }

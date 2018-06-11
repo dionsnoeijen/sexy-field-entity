@@ -52,10 +52,20 @@ final class EntityGeneratorTest extends TestCase
         $aField->setHandle('one');
         $aField->setName('one');
         $aField->setFieldType($fieldTypeMock);
+        $aField->setConfig(['field' => [
+            'name' => 'one',
+            'handle' => 'one'
+        ]]);
+        $section->addField($aField);
+
         $bField = new Field();
         $bField->setHandle('two');
         $bField->setName('two');
         $bField->setFieldType($fieldTypeMock);
+        $bField->setConfig(['field' => [
+            'name' => 'two',
+            'handle' => 'two'
+        ]]);
         $section->addField($bField);
 
         $sectionConfigForWritable = $section->getConfig();
