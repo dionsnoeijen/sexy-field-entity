@@ -11,6 +11,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class {{ section }} implements CommonSectionInterface
 {
+    {{ metadata }}
+
     {{ properties }}
 
     /** @var ?int */
