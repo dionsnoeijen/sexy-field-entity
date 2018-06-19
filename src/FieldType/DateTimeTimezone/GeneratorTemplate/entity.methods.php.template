@@ -1,0 +1,30 @@
+public function get{{ methodName }}(): ?\DateTimeImmutable
+{
+    $date = null;
+    if (!empty($this->{{ propertyName }})) {
+        try {
+            // phpcs:ignore Generic.Files.LineLength
+            $date = new \DateTimeImmutable($this->{{ propertyName }}, $this->{{ propertyName }}Timezone);
+        } catch (\Exception $exception) {
+            return null;
+        }
+    }
+    return $date;
+}
+
+public function get{{ methodName }}Timezone(): ?string
+{
+    return $this->{{ propertyName }}Timezone;
+}
+
+public function set{{ methodName }}({{ nullable }}\DateTime ${{ propertyName }}): {{ section }}
+{
+    $this->{{ propertyName }} = ${{ propertyName }};
+    return $this;
+}
+
+public function set{{ methodName }}Timezone({{ nullable }}string ${{ propertyName }}Timezone): {{ section }}
+{
+    $this->{{ propertyName }}Timezone = ${{ propertyName }}Timezone;
+    return $this;
+}

@@ -1,0 +1,5 @@
+/** @var ?\DateTime */
+protected ${{ propertyName }};
+
+/** @var ?string */
+protected ${{ propertyName }}Timezone = 'Europe/Amsterdam';

@@ -1,0 +1,2 @@
+$this->{{ propertyName }} = new \DateTime('now');
+$this->{{ propertyName }}Timezone = 'Europe/Amsterdam';
