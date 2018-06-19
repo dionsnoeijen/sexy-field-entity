@@ -28,7 +28,7 @@ class EntityMethodsGenerator implements GeneratorInterface
         try {
             $generatorConfig = $field->getConfig()->getGeneratorConfig()->toArray();
 
-            if (!$generatorConfig['entity']['validator']['NotBlank']) { //which means the yml tilde: use default value
+            if (array_key_exists('NotBlank', $generatorConfig['entity']['validator'])) {
                 $nullable = false;
             }
         } catch (\Throwable $e) {
@@ -40,15 +40,14 @@ class EntityMethodsGenerator implements GeneratorInterface
 
             $generatorConfig = $sectionConfig->getGeneratorConfig()->toArray();
 
-            if (!$generatorConfig['entity'][(string)$field->getHandle()]['NotBlank']) {
+            if (array_key_exists('NotBlank', $generatorConfig['entity'][(string)$field->getHandle()])) {
                 $nullable = false;
             }
         } catch (\Throwable $e) {
         }
 
         $asString = (string) TemplateLoader::load(
-            (string) $templateDir . '/GeneratorTemplate/entity.methods.php',
-            ['nullable' => $nullable]
+            (string) $templateDir . '/GeneratorTemplate/entity.methods.php.template'
         );
 
         $asString = str_replace(
