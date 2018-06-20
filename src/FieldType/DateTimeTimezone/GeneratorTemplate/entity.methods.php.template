@@ -1,15 +1,14 @@
-public function get{{ methodName }}(): ?\DateTimeImmutable
+public function get{{ methodName }}(): ?\DateTime
 {
-    $date = null;
     if (!empty($this->{{ propertyName }})) {
         try {
             // phpcs:ignore Generic.Files.LineLength
-            $date = new \DateTimeImmutable($this->{{ propertyName }}, $this->{{ propertyName }}Timezone);
+            $this->{{ propertyName }}->setTimezone(new \DateTimeZone($this->{{ propertyName }}Timezone));
         } catch (\Exception $exception) {
             return null;
         }
     }
-    return $date;
+    return $this->{{ propertyName }};
 }
 
 public function get{{ methodName }}Timezone(): ?string
