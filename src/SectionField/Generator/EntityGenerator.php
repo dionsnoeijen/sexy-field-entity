@@ -390,7 +390,7 @@ EOT;
             '{{ metadata }}',
             <<< EOF
 
-    public static function fieldInfo()
+    public static function fieldInfo(): array
     {
         return $content;
     }
