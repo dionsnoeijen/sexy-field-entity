@@ -11,8 +11,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class {{ section }} implements CommonSectionInterface
 {
-    {{ metadata }}
-
     {{ properties }}
 
     /** @var ?int */
@@ -22,6 +20,8 @@ class {{ section }} implements CommonSectionInterface
     {
         {{ constructor }}
     }
+
+    {{ metadata }}
 
     public function getId(): ?int
     {

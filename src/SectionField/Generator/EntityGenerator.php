@@ -381,14 +381,21 @@ EOT;
         // Better indentation
         $content = preg_replace('/=> \\n */', '=> ', $content);
         $content = str_replace('  ', '    ', $content);
-        $content = str_replace("\n", "\n    ", $content);
+        $content = str_replace("\n", "\n        ", $content);
 
         // PSR2-conforming null constant
         $content = str_replace('=> NULL', '=> null', $content);
 
         return str_replace(
             '{{ metadata }}',
-            "    const FIELDS = $content;\n",
+            <<< EOF
+
+    public static function fieldInfo()
+    {
+        return $content;
+    }
+EOF
+            ,
             $template
         );
     }
