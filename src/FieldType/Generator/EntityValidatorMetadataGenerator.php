@@ -29,6 +29,24 @@ class EntityValidatorMetadataGenerator implements GeneratorInterface
         );
 
         $generatorConfig = $field->getConfig()->getGeneratorConfig()->toArray();
+        $fieldConfig = $field->getConfig()->toArray();
+
+        // @todo: Move to value object...
+        $propertyName =
+            !empty($fieldConfig['field']['as']) ?
+                $fieldConfig['field']['as'] :
+                (!empty($fieldConfig['field']['to']) ?
+                    $fieldConfig['field']['to'] :
+                    $field->getConfig()->getPropertyName());
+
+        if (!empty($fieldConfig['field']['kind'])) {
+            switch ($fieldConfig['field']['kind']) {
+                case 'many-to-many':
+                case 'one-to-many':
+                    $propertyName = Inflector::pluralize($propertyName);
+                    break;
+            }
+        }
 
         if (!empty($generatorConfig['entity']['validator'])) {
             $asString = str_replace(
