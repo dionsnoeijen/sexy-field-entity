@@ -146,10 +146,13 @@ public function hasMe(): bool
     return !empty($this->me);
 }
 
-public function setMe(Me $me): {{ section }}
+public function setMe(?Me $me): {{ section }}
 {
     if ($this->me === $me) {
         return $this;
+    }
+    if ($me === null) {
+    $this->removeMe();
     }
     $this->me = $me;
     $me->addParticularMyClass($this);
@@ -195,10 +198,13 @@ public function hasMe(): bool
     return !empty($this->me);
 }
 
-public function setMe(Me $me): {{ section }}
+public function setMe(?Me $me): {{ section }}
 {
     if ($this->me === $me) {
         return $this;
+    }
+    if ($me === null) {
+    $this->removeMe();
     }
     $this->me = $me;
 

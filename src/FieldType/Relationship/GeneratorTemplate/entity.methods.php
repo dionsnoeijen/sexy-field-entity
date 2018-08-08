@@ -46,10 +46,13 @@ public function has<?php echo $methodName; ?>(): bool
     return !empty($this-><?php echo $propertyName; ?>);
 }
 
-public function set<?php echo $methodName; ?>(<?php echo $entity; ?> $<?php echo $propertyName; ?>): {{ section }}
+public function set<?php echo $methodName; ?>(?<?php echo $entity; ?> $<?php echo $propertyName; ?>): {{ section }}
 {
     if ($this-><?php echo $propertyName; ?> === $<?php echo $propertyName; ?>) {
         return $this;
+    }
+    if ($<?php echo $propertyName; ?> === null) {
+    $this->remove<?php echo $methodName; ?>();
     }
     $this-><?php echo $propertyName; ?> = $<?php echo $propertyName; ?>;
 <?php if ($kind === 'many-to-one' && $type === 'bidirectional') { ?>
