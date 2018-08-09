@@ -46,19 +46,25 @@ public function has<?php echo $methodName; ?>(): bool
     return !empty($this-><?php echo $propertyName; ?>);
 }
 
-public function set<?php echo $methodName; ?>(?<?php echo $entity; ?> $<?php echo $propertyName; ?>): {{ section }}
+public function set<?php echo $methodName; ?>(<?php if ($nullable) { echo '?'; }?><?php echo $entity; ?> $<?php echo $propertyName; ?>): {{ section }}
 {
     if ($this-><?php echo $propertyName; ?> === $<?php echo $propertyName; ?>) {
         return $this;
     }
+    <?php if ($nullable) { ?>
     if ($<?php echo $propertyName; ?> === null) {
     $this->remove<?php echo $methodName; ?>();
-    }
+    } else {
+        <?php } ?>
+
     $this-><?php echo $propertyName; ?> = $<?php echo $propertyName; ?>;
 <?php if ($kind === 'many-to-one' && $type === 'bidirectional') { ?>
     $<?php echo $propertyName; ?>->add<?php echo $thatMethodName; ?>($this);
 <?php } elseif ($kind === 'one-to-one' && $type === 'bidirectional') { ?>
     $<?php echo $propertyName; ?>->set<?php echo $thatMethodName; ?>($this);
+<?php } ?>
+<?php if ($nullable) { ?>
+    }
 <?php } ?>
 
     return $this;
