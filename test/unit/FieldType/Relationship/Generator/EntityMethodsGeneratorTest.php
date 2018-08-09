@@ -12,7 +12,7 @@ use Tardigrades\FieldType\ValueObject\TemplateDir;
 use Tardigrades\SectionField\ValueObject\FieldConfig;
 
 /**
- * @coversDefaultClass Tardigrades\FieldType\Relationship\Generator\EntityMethodsGenerator
+ * @coversDefaultClass \Tardigrades\FieldType\Relationship\Generator\EntityMethodsGenerator
  */
 final class EntityMethodsGeneratorTest extends TestCase
 {
@@ -151,6 +151,7 @@ public function setMe(Me $me): {{ section }}
     if ($this->me === $me) {
         return $this;
     }
+    
     $this->me = $me;
     $me->addParticularMyClass($this);
 
@@ -200,6 +201,7 @@ public function setMe(Me $me): {{ section }}
     if ($this->me === $me) {
         return $this;
     }
+    
     $this->me = $me;
 
     return $this;

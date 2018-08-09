@@ -37,6 +37,12 @@ class EntityMethodsGenerator implements GeneratorInterface
             $thatMethodName = $sectionConfig->getClassName();
         }
 
+        $nullable = false;
+        try {
+            $nullable = $fieldConfig['field']['generator']['entity']['nullable'];
+        } catch (\Exception $exception) {
+        }
+
         return Template::create((string) TemplateLoader::load(
             (string) $templateDir .
             '/GeneratorTemplate/entity.methods.php',
@@ -48,7 +54,8 @@ class EntityMethodsGenerator implements GeneratorInterface
                 'methodName' => ucfirst($toHandle),
                 'entity' => ucfirst($fieldConfig['field']['to']),
                 'propertyName' => $toHandle,
-                'thatMethodName' => $thatMethodName
+                'thatMethodName' => $thatMethodName,
+                'nullable' => $nullable
             ]
         ));
     }
