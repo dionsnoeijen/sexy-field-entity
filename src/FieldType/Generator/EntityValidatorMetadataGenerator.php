@@ -13,6 +13,7 @@ declare (strict_types = 1);
 
 namespace Tardigrades\FieldType\Generator;
 
+use Doctrine\Common\Util\Inflector;
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\FieldType\ValueObject\Template;
 use Tardigrades\FieldType\ValueObject\TemplateDir;
@@ -29,11 +30,29 @@ class EntityValidatorMetadataGenerator implements GeneratorInterface
         );
 
         $generatorConfig = $field->getConfig()->getGeneratorConfig()->toArray();
+        $fieldConfig = $field->getConfig()->toArray();
+
+        // @todo: Move to value object...
+        $propertyName =
+            !empty($fieldConfig['field']['as']) ?
+                $fieldConfig['field']['as'] :
+                (!empty($fieldConfig['field']['to']) ?
+                    $fieldConfig['field']['to'] :
+                    $field->getConfig()->getPropertyName());
+
+        if (!empty($fieldConfig['field']['kind'])) {
+            switch ($fieldConfig['field']['kind']) {
+                case 'many-to-many':
+                case 'one-to-many':
+                    $propertyName = Inflector::pluralize((string) $propertyName);
+                    break;
+            }
+        }
 
         if (!empty($generatorConfig['entity']['validator'])) {
             $asString = str_replace(
                 '{{ propertyName }}',
-                $field->getConfig()->getPropertyName(),
+                $propertyName,
                 $asString
             );
             $strings = [];
