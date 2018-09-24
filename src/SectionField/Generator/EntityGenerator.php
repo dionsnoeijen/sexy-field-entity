@@ -116,7 +116,8 @@ class EntityGenerator extends Generator implements GeneratorInterface
                 $relationship = [
                     'class' => $targetClass,
                     'plural' => $plural,
-                    'kind' => $kind
+                    'kind' => $kind,
+                    'owner' => $fieldConfigArray['field']['owner']
                 ];
             } else {
                 $propertyName = (string)$fieldConfig->getPropertyName();

@@ -47,4 +47,9 @@ class {{ section }} implements CommonSectionInterface
     {
         {{ preUpdate }}
     }
+
+    public static function fieldInfo(): array
+    {
+        return static::FIELDS;
+    }
 }
