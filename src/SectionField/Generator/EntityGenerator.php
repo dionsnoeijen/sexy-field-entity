@@ -93,6 +93,7 @@ class EntityGenerator extends Generator implements GeneratorInterface
             } catch (\Exception $exception) {}
 
             $fieldTypeClass = (string)$field->getFieldType()->getFullyQualifiedClassName()->getClassName();
+            $fieldTypeName = (string)$field->getFieldType()->getType();
             $fieldConfig = $field->getConfig();
             if ($fieldTypeClass === 'Relationship') {
                 $fieldConfigArray = $fieldConfig->toArray();
@@ -127,13 +128,26 @@ class EntityGenerator extends Generator implements GeneratorInterface
                 $relationship = null;
             }
 
-            $this->metadata[$propertyName] = [
+            $this->metadata[$propertyName] = $newMetadata = [
                 'handle' => (string)$field->getHandle(),
-                'type' => (string)$field->getFieldType()->getType(),
+                'type' => $fieldTypeName,
+                'parent' => null,
                 'getter' => $getter,
                 'setter' => $setter,
                 'relationship' => $relationship
             ];
+
+            $fieldTypeSpecClass = (string)$field->getFieldType()->getFullyQualifiedClassName();
+            foreach ($fieldTypeSpecClass::getCofields($newMetadata['handle']) as $coHandle) {
+                $this->metadata[$coHandle] = [
+                    'handle' => $coHandle,
+                    'type' => $fieldTypeName,
+                    'parent' => $newMetadata['handle'],
+                    'getter' => 'get' . ucfirst($coHandle),
+                    'setter' => 'set' . ucfirst($coHandle),
+                    'relationship' => null
+                ];
+            }
 
             $parsed = $this->getFieldTypeGeneratorConfig($field, self::GENERATE_FOR);
 
