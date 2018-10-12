@@ -43,7 +43,7 @@ final class EntityGeneratorTest extends TestCase
 
         $fieldTypeMock = Mockery::mock(new FieldType())->makePartial();
         $fieldTypeMock->shouldReceive('getFullyQualifiedClassName')->andReturn(
-            FullyQualifiedClassName::fromString('yesImQualified')
+            FullyQualifiedClassName::fromString(\Foo\Bar::class)
         );
         $fieldTypeMock->shouldReceive('directory')->andReturn('one/two');
         $fieldTypeMock->shouldReceive('getType')->andReturn(Type::fromString('typoe'));
@@ -159,5 +159,14 @@ final class EntityGeneratorTest extends TestCase
                 ]
             ]
         ];
+    }
+}
+
+namespace Foo;
+
+class Bar {
+    public static function getCofields(string $handle): array
+    {
+        return [];
     }
 }
