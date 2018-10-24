@@ -18,10 +18,11 @@ use Tardigrades\Entity\FieldInterface;
 use Tardigrades\FieldType\ValueObject\Template;
 use Tardigrades\FieldType\ValueObject\TemplateDir;
 use Tardigrades\SectionField\Generator\Loader\TemplateLoader;
+use Tardigrades\SectionField\ValueObject\SectionConfig;
 
 class EntityValidatorMetadataGenerator implements GeneratorInterface
 {
-    public static function generate(FieldInterface $field, TemplateDir $templateDir): Template
+    public static function generate(FieldInterface $field, TemplateDir $templateDir, ...$options): Template
     {
         $asString = (string) Template::create(
             (string) TemplateLoader::load(
@@ -48,6 +49,13 @@ class EntityValidatorMetadataGenerator implements GeneratorInterface
                     break;
             }
         }
+
+
+        // See if there's stuff in the section config that overrides the field config
+        /** @var SectionConfig $sectionConfig */
+        $sectionConfig = $options[0]['sectionConfig'];
+        $sectionConfig = $sectionConfig->getGeneratorConfig()->toArray();
+        $generatorConfig = self::checkSectionOverrides($sectionConfig, $generatorConfig, (string) $propertyName);
 
         if (!empty($generatorConfig['entity']['validator'])) {
             $asString = str_replace(
@@ -77,5 +85,29 @@ class EntityValidatorMetadataGenerator implements GeneratorInterface
         }
 
         return Template::create('');
+    }
+
+    private static function checkSectionOverrides(
+        array $sectionConfig,
+        array $generatorConfig,
+        string $propertyName
+    ): array {
+
+        if (isset($sectionConfig['entity']) &&
+            array_key_exists($propertyName, $sectionConfig['entity'])
+        ) {
+            foreach ($sectionConfig['entity'][$propertyName] as $key => $value) {
+                if (array_key_exists($key, $generatorConfig['entity']['validator'])) {
+                    if (!$sectionConfig['entity'][$propertyName][$key]) {
+                        unset($generatorConfig['entity']['validator'][$key]);
+                    } else {
+                        $generatorConfig['entity']['validator'][$key] =
+                            $sectionConfig['entity'][$propertyName][$key];
+                    }
+                }
+            }
+        }
+
+        return $generatorConfig;
     }
 }
