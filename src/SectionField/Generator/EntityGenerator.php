@@ -422,44 +422,45 @@ EOT;
                 );
 
                 foreach ($options as $assertion => $assertionOptions) {
-                    try {
-                        $asString = (string) Template::create(
-                            (string) TemplateLoader::load(
-                                $templateDirectory . '/GeneratorTemplate/entity.validator-metadata.php.template'
-                            )
-                        );
-                        $asString = str_replace(
-                            '{{ propertyName }}',
-                            $field->getHandle(),
-                            $asString
-                        );
-
-                        $asString = str_replace(
-                            '{{ assertion }}',
-                            $assertion,
-                            $asString
-                        );
-                        $arguments = '';
-                        if (is_array($assertionOptions)) {
-                            foreach ($assertionOptions as $optionKey => $optionValue) {
-                                $arguments .= "'{$optionKey}' => '{$optionValue}',";
+                    if ($assertionOptions) {
+                        try {
+                            $asString = (string)Template::create(
+                                (string)TemplateLoader::load(
+                                    $templateDirectory . '/GeneratorTemplate/entity.validator-metadata.php.template'
+                                )
+                            );
+                            $asString = str_replace(
+                                '{{ propertyName }}',
+                                $field->getHandle(),
+                                $asString
+                            );
+                            $asString = str_replace(
+                                '{{ assertion }}',
+                                $assertion,
+                                $asString
+                            );
+                            $arguments = '';
+                            if (is_array($assertionOptions)) {
+                                foreach ($assertionOptions as $optionKey => $optionValue) {
+                                    $arguments .= "'{$optionKey}' => '{$optionValue}',";
+                                }
+                                if (!empty($arguments)) {
+                                    $arguments = rtrim($arguments, ',');
+                                    $arguments = "[{$arguments}]";
+                                }
                             }
-                            if (!empty($arguments)) {
-                                $arguments = rtrim($arguments, ',');
-                                $arguments = "[{$arguments}]";
+                            $asString = str_replace(
+                                '{{ assertionOptions }}',
+                                $arguments,
+                                $asString
+                            );
+                            if (strpos($template, $asString) === false) {
+                                // Add to metadata
+                                $metadata .= $asString;
                             }
+                        } catch (\Exception $exception) {
+                            $this->buildMessages[] = $exception->getMessage();
                         }
-                        $asString = str_replace(
-                            '{{ assertionOptions }}',
-                            $arguments,
-                            $asString
-                        );
-                        if (strpos($template, $asString) === false) {
-                            // Add to metadata
-                            $metadata .= $asString;
-                        }
-                    } catch (\Exception $exception) {
-                        $this->buildMessages[] = $exception->getMessage();
                     }
                 }
             }

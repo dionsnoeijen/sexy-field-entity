@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Tardigrades\Entity\Field;
 use Tardigrades\FieldType\ValueObject\Template;
 use Tardigrades\FieldType\ValueObject\TemplateDir;
+use Tardigrades\SectionField\ValueObject\SectionConfig;
 
 /**
  * @coversDefaultClass Tardigrades\FieldType\Generator\EntityValidatorMetadataGenerator
@@ -59,7 +60,23 @@ EOT;
         $field = new Field();
         $field->setConfig($config);
 
-        $result = EntityValidatorMetadataGenerator::generate($field, $templateDir);
+        $result = EntityValidatorMetadataGenerator::generate($field, $templateDir, [
+            'sectionConfig' =>
+                SectionConfig::fromArray([
+                    'section' => [
+                        'name' => 'Sjala',
+                        'handle' => 'sjala',
+                        'fields' => [
+                            'one'
+                        ],
+                        'default' => 'title',
+                        'namespace' => 'AppBundle',
+                        'generator' => [
+                            'entity' => []
+                        ]
+                    ]
+                ])
+        ]);
         $expected = Template::create($templateString);
 
         $this->assertEquals($expected, $result);
@@ -96,7 +113,23 @@ EOT;
         $field = new Field();
         $field->setConfig($config);
 
-        $result = EntityValidatorMetadataGenerator::generate($field, $templateDir);
+        $result = EntityValidatorMetadataGenerator::generate($field, $templateDir, [
+            'sectionConfig' =>
+                SectionConfig::fromArray([
+                    'section' => [
+                        'name' => 'Sjala',
+                        'handle' => 'sjala',
+                        'fields' => [
+                            'one'
+                        ],
+                        'default' => 'title',
+                        'namespace' => 'AppBundle',
+                        'generator' => [
+                            'entity' => []
+                        ]
+                    ]
+                ])
+        ]);
         $expected = Template::create('');
 
         $this->assertEquals($expected, $result);

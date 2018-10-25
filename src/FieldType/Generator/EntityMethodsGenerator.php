@@ -24,26 +24,32 @@ class EntityMethodsGenerator implements GeneratorInterface
     public static function generate(FieldInterface $field, TemplateDir $templateDir, ...$options): Template
     {
         $nullable = true;
-
         try {
             $generatorConfig = $field->getConfig()->getGeneratorConfig()->toArray();
-
-            if (array_key_exists('NotBlank', $generatorConfig['entity']['validator'])) {
+            if (array_key_exists('NotBlank', $generatorConfig['entity']['validator']) &&
+                $generatorConfig['entity']['validator']['NotBlank']
+            ) {
                 $nullable = false;
             }
         } catch (\Throwable $e) {
+            // The key did't exist at all
         }
 
         try {
             /** @var SectionConfig $sectionConfig */
             $sectionConfig = $options[0]['sectionConfig'];
-
             $generatorConfig = $sectionConfig->getGeneratorConfig()->toArray();
-
+            // If the key exists, it means it's overridden in the section config.
+            // So let's do it again, set it to true.
             if (array_key_exists('NotBlank', $generatorConfig['entity'][(string)$field->getHandle()])) {
-                $nullable = false;
+                $nullable = true;
+                // unless it's set to false
+                if ($generatorConfig['entity'][(string)$field->getHandle()]['NotBlank']) {
+                    $nullable = false;
+                }
             }
         } catch (\Throwable $e) {
+            // The key did't exist at all
         }
 
         $asString = (string) TemplateLoader::load(

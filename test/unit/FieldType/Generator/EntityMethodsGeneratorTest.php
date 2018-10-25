@@ -50,7 +50,7 @@ EOT;
                 'generator' => [
                     'entity' => [
                         'validator' => [
-                            'NotBlank' => null
+                            'NotBlank' => true
                         ]
                     ]
                 ]
