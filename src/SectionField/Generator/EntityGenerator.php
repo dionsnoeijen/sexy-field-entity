@@ -83,15 +83,15 @@ class EntityGenerator extends Generator implements GeneratorInterface
         /** @var FieldInterface $field */
         foreach ($fields as $field) {
 
-            // First see if this field is to be ignored by this generator
+            if ($this->shouldIgnore($field)) {
+                continue;
+            }
+
             try {
                 $generatorConfig = $field->getConfig()->getGeneratorConfig()->toArray();
-                if (!empty($generatorConfig[self::GENERATE_FOR]['ignore']) ||
-                    $generatorConfig[self::GENERATE_FOR]['ignore']) {
-                    continue;
-                }
-            } catch (\Exception $exception) {}
-
+            } catch (\Exception $exception) {
+                // No field specific config, that is no problem.
+            }
             $fieldTypeClass = (string)$field->getFieldType()->getFullyQualifiedClassName()->getClassName();
             $fieldTypeName = (string)$field->getFieldType()->getType();
             $fieldConfig = $field->getConfig();
