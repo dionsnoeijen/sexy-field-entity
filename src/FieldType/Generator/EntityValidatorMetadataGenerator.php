@@ -65,7 +65,7 @@ class EntityValidatorMetadataGenerator implements GeneratorInterface
             );
             $strings = [];
             foreach ($generatorConfig['entity']['validator'] as $assertion => $assertionOptions) {
-                $path = strpos("\"", $assertion)? 'new Assert\\': 'new \\';
+                $path = strpos("\\", $assertion) !== false? 'new Assert\\': 'new \\';
                 $stringPiece = $asString;
                 $stringPiece = str_replace('{{ path }}', $path, $stringPiece);
                 $stringPiece = str_replace('{{ assertion }}', $assertion, $stringPiece);
