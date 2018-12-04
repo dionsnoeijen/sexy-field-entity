@@ -1,1 +1,1 @@
-$metadata->addPropertyConstraint('{{ propertyName }}', new Assert\{{ assertion }}({{ assertionOptions }}));
+$metadata->addPropertyConstraint('{{ propertyName }}', {{ path }}{{ assertion }}({{ assertionOptions }}));
