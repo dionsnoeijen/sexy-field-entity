@@ -52,4 +52,6 @@ class {{ section }} implements CommonSectionInterface
     {
         return static::FIELDS;
     }
+
+    {{ extraMethods }}
 }
