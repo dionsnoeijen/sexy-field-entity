@@ -403,7 +403,7 @@ EOT;
 
         return str_replace(
             '{{ metadata }}',
-            "    const FIELDS = $content;\n",
+            "\n    const FIELDS = $content;\n",
             $template
         );
     }

@@ -11,6 +11,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class {{ section }} implements CommonSectionInterface
 {
+    use Extra\{{ section }}Trait;
+
     {{ metadata }}
 
     {{ properties }}
