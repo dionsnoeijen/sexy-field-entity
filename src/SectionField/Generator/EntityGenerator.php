@@ -403,7 +403,7 @@ EOT;
 
         return str_replace(
             '{{ metadata }}',
-            "    const FIELDS = $content;\n",
+            "\n    const FIELDS = $content;\n",
             $template
         );
     }
@@ -476,13 +476,6 @@ EOT;
         return $template;
     }
 
-    private function insertExtraMethods(string $template): string
-    {
-        $config = $this->sectionConfig->toArray();
-        $methods = $config['section']['extraMethods'] ?? '';
-        return str_replace('{{ extraMethods }}', $methods, $template);
-    }
-
     private function generateEntity(): Template
     {
         $template = TemplateLoader::load(__DIR__ . '/GeneratorTemplate/entity.php.template');
@@ -493,7 +486,6 @@ EOT;
         $template = $this->insertSection($template);
         $template = $this->insertNamespace($template);
         $template = $this->insertValidationMetadata($template);
-        $template = $this->insertExtraMethods($template);
         $template = PhpFormatter::format($template);
         $template = $this->insertFieldMetadata($template);
 

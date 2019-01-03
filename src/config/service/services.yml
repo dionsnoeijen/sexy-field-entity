@@ -7,4 +7,14 @@ services:
       $sectionManager: '@Tardigrades\SectionField\Service\DoctrineSectionManager'
       $container: '@service_container'
 
+  Tardigrades\SectionField\Generator\EntityTraitGenerator:
+    autowire: false
+    arguments:
+      $fieldManager: '@Tardigrades\SectionField\Service\DoctrineFieldManager'
+      $fieldTypeManager: '@Tardigrades\SectionField\Service\DoctrineFieldTypeManager'
+      $sectionManager: '@Tardigrades\SectionField\Service\DoctrineSectionManager'
+      $container: '@service_container'
+
   section_field.generator.entity_generator: '@Tardigrades\SectionField\Generator\EntityGenerator'
+
+  section_field.generator.entity_trait_generator: '@Tardigrades\SectionField\Generator\EntityTraitGenerator'
