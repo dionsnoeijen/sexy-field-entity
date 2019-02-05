@@ -46,6 +46,8 @@ class EntityMethodsGenerator implements GeneratorInterface
 
         $stringHandle = (string) $handle;
         $hierarchy = $fieldConfig['field']['hierarchy'];
+        $multiple = $fieldConfig['field']['form']['all']['multiple'];
+        $returnType = $multiple? 'array': 'string';
         $sectionName = ucfirst((string) $sectionConfig->getHandle());
         $positionToLook = array_search($sectionName, $hierarchy) + 1;
 
@@ -58,7 +60,8 @@ class EntityMethodsGenerator implements GeneratorInterface
                 'nullable' => $nullable,
                 'sectionName' => $sectionName,
                 'positionToLook' => $positionToLook,
-                'hasParentConfig' => (count($hierarchy) > $positionToLook)
+                'hasParentConfig' => (count($hierarchy) > $positionToLook),
+                'returnType' => $returnType
             ]
         ));
     }
