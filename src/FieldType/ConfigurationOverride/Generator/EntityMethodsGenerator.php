@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the SexyField package.
+ *
+ * (c) Dion Snoeijen <hallo@dionsnoeijen.nl>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 declare (strict_types=1);
 
@@ -29,9 +37,7 @@ class EntityMethodsGenerator implements GeneratorInterface
         try {
             /** @var SectionConfig $sectionConfig */
             $sectionConfig = $options[0]['sectionConfig'];
-
             $generatorConfig = $sectionConfig->getGeneratorConfig()->toArray();
-
             if (array_key_exists('NotBlank', $generatorConfig['entity'][(string)$field->getHandle()])) {
                 $nullable = '';
             }
@@ -39,18 +45,21 @@ class EntityMethodsGenerator implements GeneratorInterface
         }
 
         $stringHandle = (string) $handle;
+        $hierarchy = $fieldConfig['field']['hierarchy'];
+        $sectionName = ucfirst((string) $sectionConfig->getHandle());
+        $positionToLook = array_search($sectionName, $hierarchy) + 1;
 
         return Template::create((string)TemplateLoader::load(
-            $templateDir .
-            '/GeneratorTemplate/entity.methods.php',
+            (string) $templateDir . '/GeneratorTemplate/entity.methods.php',
             [
-                'hierarchy' => $fieldConfig['field']['hierarchy'],
+                'hierarchy' => $hierarchy,
                 'propertyName' => $stringHandle,
                 'methodName' => ucfirst($stringHandle),
                 'nullable' => $nullable,
-                'sectionName' => ucfirst((string) $sectionConfig->getHandle())
+                'sectionName' => $sectionName,
+                'positionToLook' => $positionToLook,
+                'hasParentConfig' => (count($hierarchy) > $positionToLook)
             ]
         ));
     }
 }
-
