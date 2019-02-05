@@ -1,16 +1,15 @@
 <?php
-$arrayOfHierarchies = explode(' ', $hierarchy);
-$positionToLook = array_search($sectionName, $arrayOfHierarchies) + 1;
-$hasParentConfig = count($arrayOfHierarchies) > $positionToLook;
+$positionToLook = array_search($sectionName, $hierarchy) + 1;
+$hasParentConfig = count($hierarchy) > $positionToLook;
 echo '
 public function get' . "$methodName" . '(): ?string
 {' . "\n";
 if ($hasParentConfig) {
     echo
         'if (empty($this->' . "$propertyName" . ')) {
-        return $this->get' . "$arrayOfHierarchies[$positionToLook]" . '()->get' . "$methodName" . '();
+        return $this->get' . "$hierarchy[$positionToLook]" . '()->get' . "$methodName" . '();
     }';
-    }
+}
 echo '
     return $this->' . "$propertyName" . ';
     }
@@ -19,4 +18,4 @@ echo '
     {
         $this->' . "$propertyName" . ' = $' . "$propertyName" . ';
         return $this;
-    }';
+    }'."\n";
