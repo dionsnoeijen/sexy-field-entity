@@ -7,7 +7,7 @@ public function get<?php echo $methodName; ?>(): ?<?php echo $returnType; ?>
     };
 <?php } ?>
 <?php if ($returnType === 'array') { ?>
-    return unserialize($this-><?php echo $propertyName; ?>);
+    return $this-><?php echo $propertyName; ?> !== null? unserialize($this-><?php echo $propertyName; ?>): null;
 <?php } ?>
 <?php if ($returnType === 'string') { ?>
     return $this-><?php echo $propertyName; ?>;
