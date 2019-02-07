@@ -14,8 +14,14 @@ public function get<?php echo $methodName; ?>(): ?<?php echo $returnType; ?>
 <?php } ?>
 }
 
-public function set<?php echo $methodName; ?>(<?php echo $nullable; ?>string $<?php echo $propertyName; ?>): {{ section }}
+public function set<?php echo $methodName; ?>(<?php echo $nullable; ?><?php echo $returnType; ?> $<?php echo $propertyName; ?>): {{ section }}
 {
-$this-><?php echo $propertyName; ?> = $<?php echo $propertyName; ?>;
+<?php if ($returnType === 'array') { ?>
+    $this-><?php echo $propertyName; ?> = serialize($<?php echo $propertyName; ?>);
+<?php } ?>
+<?php if ($returnType === 'string') { ?>
+    $this-><?php echo $propertyName; ?> = $<?php echo $propertyName; ?>;
+<?php } ?>
+
 return $this;
 }
