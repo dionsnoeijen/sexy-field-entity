@@ -13,6 +13,7 @@ declare (strict_types=1);
 
 namespace Tardigrades\FieldType\ConfigurationOverride\Generator;
 
+use Assert\Assertion;
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\FieldType\Generator\GeneratorInterface;
 use Tardigrades\FieldType\ValueObject\Template;
@@ -46,7 +47,12 @@ class EntityMethodsGenerator implements GeneratorInterface
 
         $stringHandle = (string) $handle;
         $hierarchy = $fieldConfig['field']['hierarchy'];
-        $multiple = $fieldConfig['field']['form']['all']['multiple'];
+        Assertion::isArray($hierarchy, 'hierarchy must be an Array');
+        try {
+            $multiple = $fieldConfig['field']['form']['all']['multiple'];
+        } catch (\Throwable $exception) {
+            $multiple = false;
+        }
         $returnType = $multiple? 'array': 'string';
         $sectionName = ucfirst((string) $sectionConfig->getHandle());
         $positionToLook = array_search($sectionName, $hierarchy) + 1;
