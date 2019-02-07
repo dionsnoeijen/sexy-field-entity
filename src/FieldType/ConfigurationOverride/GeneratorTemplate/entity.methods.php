@@ -3,7 +3,11 @@ public function get<?php echo $methodName; ?>(): ?<?php echo $returnType; ?>
 {
 <?php if ($hasParentConfig) { ?>
     if (empty($this-><?php echo $propertyName; ?>)) {
+    try {
     return $this->get<?php echo $hierarchy[$positionToLook]; ?>()->get<?php echo $methodName; ?>();
+    } catch (\Throwable $exception) {
+    return null;
+    }
     };
 <?php } ?>
 <?php if ($returnType === 'array') { ?>
