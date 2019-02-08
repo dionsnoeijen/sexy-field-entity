@@ -46,6 +46,7 @@ class EntityMethodsGenerator implements GeneratorInterface
         }
 
         $stringHandle = (string) $handle;
+        Assertion::keyIsset('hierarchy', $fieldConfig['field']);
         $hierarchy = $fieldConfig['field']['hierarchy'];
         Assertion::isArray($hierarchy, 'hierarchy must be an Array');
         try {
