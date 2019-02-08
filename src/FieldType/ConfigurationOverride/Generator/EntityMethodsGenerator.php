@@ -45,10 +45,13 @@ class EntityMethodsGenerator implements GeneratorInterface
         } catch (\Throwable $e) {
         }
 
-        $stringHandle = (string) $handle;
-        Assertion::keyIsset('hierarchy', $fieldConfig['field']);
-        $hierarchy = $fieldConfig['field']['hierarchy'];
+        try {
+            $hierarchy = $fieldConfig['field']['hierarchy'];
+        } catch (\Throwable $exception) {
+        }
         Assertion::isArray($hierarchy, 'hierarchy must be an Array');
+
+        $stringHandle = (string) $handle;
         try {
             $multiple = $fieldConfig['field']['form']['all']['multiple'];
         } catch (\Throwable $exception) {
