@@ -11,7 +11,8 @@ public function get<?php echo $methodName; ?>(): ?<?php echo $returnType; ?>
     };
 <?php } ?>
 <?php if ($returnType === 'array') { ?>
-    return $this-><?php echo $propertyName; ?> !== null? unserialize($this-><?php echo $propertyName; ?>): null;
+    $unserialized = $this-><?php echo $propertyName; ?> !== null? unserialize($this-><?php echo $propertyName; ?>): null;
+    return array_values($unserialized);
 <?php } ?>
 <?php if ($returnType === 'string') { ?>
     return $this-><?php echo $propertyName; ?>;
@@ -21,7 +22,7 @@ public function get<?php echo $methodName; ?>(): ?<?php echo $returnType; ?>
 public function set<?php echo $methodName; ?>(<?php echo $nullable; ?><?php echo $returnType; ?> $<?php echo $propertyName; ?>): {{ section }}
 {
 <?php if ($returnType === 'array') { ?>
-    $this-><?php echo $propertyName; ?> = serialize($<?php echo $propertyName; ?>);
+    $this-><?php echo $propertyName; ?> = empty($<?php echo $propertyName; ?>) ? null : serialize($<?php echo $propertyName; ?>);
 <?php } ?>
 <?php if ($returnType === 'string') { ?>
     $this-><?php echo $propertyName; ?> = $<?php echo $propertyName; ?>;
