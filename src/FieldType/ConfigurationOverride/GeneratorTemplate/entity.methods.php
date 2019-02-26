@@ -11,8 +11,8 @@ public function get<?php echo $methodName; ?>(): ?<?php echo $returnType; ?>
     };
 <?php } ?>
 <?php if ($returnType === 'array') { ?>
-    $unserialized = $this-><?php echo $propertyName; ?> !== null? unserialize($this-><?php echo $propertyName; ?>): null;
-    return array_values($unserialized);
+    $unserialized = $this-><?php echo $propertyName; ?> !== null ? unserialize($this-><?php echo $propertyName; ?>): null;
+    return (!empty($unserialized) && is_array($unserialized)) ? array_values($unserialized) : null;
 <?php } ?>
 <?php if ($returnType === 'string') { ?>
     return $this-><?php echo $propertyName; ?>;
