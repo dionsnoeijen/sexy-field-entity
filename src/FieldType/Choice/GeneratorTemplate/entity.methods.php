@@ -1,7 +1,8 @@
 public function get<?php echo $methodName; ?>(): ?<?php echo $returnType . PHP_EOL; ?>
 {
     <?php if ($multiple) { ?>
-        return $this-><?php echo $propertyName; ?> !== null ? unserialize($this-><?php echo $propertyName; ?>): null;
+        $unserialized = $this-><?php echo $propertyName; ?> !== null ? unserialize($this-><?php echo $propertyName; ?>): null;
+        return array_values($unserialized);
     <?php } else { ?>
         return $this-><?php echo $propertyName; ?>;
     <?php } ?>
