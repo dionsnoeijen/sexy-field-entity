@@ -17,6 +17,7 @@
             <exclude>
                 <directory suffix=".php">./src/FieldType/Relationship/GeneratorTemplate</directory>
                 <directory suffix=".php">./src/FieldType/ConfigurationOverride/GeneratorTemplate</directory>
+                <directory suffix=".php">./src/FieldType/Choice/GeneratorTemplate</directory>
             </exclude>
         </whitelist>
     </filter>
