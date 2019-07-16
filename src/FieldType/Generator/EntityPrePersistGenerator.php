@@ -20,7 +20,7 @@ use Tardigrades\SectionField\Generator\Loader\TemplateLoader;
 
 class EntityPrePersistGenerator implements GeneratorInterface
 {
-    public static function generate(FieldInterface $field, TemplateDir $templateDir): Template
+    public static function generate(FieldInterface $field, TemplateDir $templateDir, ...$options): Template
     {
         if (in_array('prePersist', $field->getConfig()->getEntityEvents())) {
             $asString = (string) TemplateLoader::load(

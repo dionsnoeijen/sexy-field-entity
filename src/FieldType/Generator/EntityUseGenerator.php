@@ -20,7 +20,7 @@ use Tardigrades\SectionField\Generator\Loader\TemplateLoader;
 
 class EntityUseGenerator implements GeneratorInterface
 {
-    public static function generate(FieldInterface $field, TemplateDir $templateDir): Template
+    public static function generate(FieldInterface $field, TemplateDir $templateDir, ...$options): Template
     {
         return Template::create(
             (string) TemplateLoader::load(
