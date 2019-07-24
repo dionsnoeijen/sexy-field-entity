@@ -24,7 +24,7 @@ use Tardigrades\SectionField\Generator\Loader\TemplateLoader;
 
 class EntityPrePersistGenerator implements GeneratorInterface
 {
-    public static function generate(FieldInterface $field, TemplateDir $templateDir): Template
+    public static function generate(FieldInterface $field, TemplateDir $templateDir, ...$options): Template
     {
         $template = PrePersistTemplate::create(
             TemplateLoader::load(

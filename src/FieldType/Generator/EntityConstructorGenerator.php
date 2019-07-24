@@ -19,7 +19,7 @@ use Tardigrades\FieldType\ValueObject\TemplateDir;
 
 class EntityConstructorGenerator implements GeneratorInterface
 {
-    public static function generate(FieldInterface $field, TemplateDir $templateDir): Template
+    public static function generate(FieldInterface $field, TemplateDir $templateDir, ...$options): Template
     {
     }
 }
