@@ -12,7 +12,7 @@
   ],
   "require": {
     "php": "^7.1",
-    "symfony/dependency-injection": "^3.3.2",
+    "symfony/dependency-injection": "^4",
     "symfony/yaml": "^3.3.2",
     "symfony/config": "^3.3.2",
     "beberlei/assert": "2.6.5"
@@ -23,7 +23,7 @@
     }
   },
   "require-dev": {
-    "tardigrades/sexy-field": "dev-master",
+    "tardigrades/sexy-field": "dev-sym-4.x",
     "phpunit/phpunit": "^6.1",
     "squizlabs/PHP_CodeSniffer": "^3.2",
     "mockery/mockery": "^0.9.9",
