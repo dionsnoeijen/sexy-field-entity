@@ -230,8 +230,8 @@ class EntityGenerator extends Generator implements GeneratorInterface
                 $b['config'][self::GENERATE_FOR]['prePersistOrder'];
         });
 
-        foreach ($this->prePersistInfo as $info) {
-            $this->templates[self::PRE_PERSIST_TEMPLATE_VAR][] = $info['generated'];
+        foreach ($this->prePersistInfo as $item) {
+            $this->templates[self::PRE_PERSIST_TEMPLATE_VAR][] = $item['generated'];
         }
     }
 
@@ -255,8 +255,8 @@ class EntityGenerator extends Generator implements GeneratorInterface
                 $b['config'][self::GENERATE_FOR]['preUpdateOrder'];
         });
 
-        foreach ($this->preUpdateInfo as $info) {
-            $this->templates[self::PRE_UPDATE_TEMPLATE_VAR][] = $info['generated'];
+        foreach ($this->preUpdateInfo as $item) {
+            $this->templates[self::PRE_UPDATE_TEMPLATE_VAR][] = $item['generated'];
         }
     }
 
