@@ -251,6 +251,8 @@ class EntityGenerator extends Generator implements GeneratorInterface
             }
         }
 
+        unset($info);
+
         usort($this->preUpdateInfo, function($a, $b) {
             return
                 $a['config'][self::GENERATE_FOR]['preUpdateOrder'] <=>
