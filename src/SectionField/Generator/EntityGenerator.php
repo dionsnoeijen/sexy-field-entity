@@ -224,6 +224,8 @@ class EntityGenerator extends Generator implements GeneratorInterface
             }
         }
 
+        unset($info);
+
         usort($this->prePersistInfo, function($a, $b) {
             return
                 $a['config'][self::GENERATE_FOR]['prePersistOrder'] <=>
@@ -248,6 +250,8 @@ class EntityGenerator extends Generator implements GeneratorInterface
                 $info['config'][self::GENERATE_FOR]['preUpdateOrder'] = 999999999;
             }
         }
+
+        unset($info);
 
         usort($this->preUpdateInfo, function($a, $b) {
             return
