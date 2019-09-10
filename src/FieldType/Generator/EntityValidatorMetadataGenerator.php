@@ -50,12 +50,15 @@ class EntityValidatorMetadataGenerator implements GeneratorInterface
             }
         }
 
-
         // See if there's stuff in the section config that overrides the field config
         /** @var SectionConfig $sectionConfig */
         $sectionConfig = $options[0]['sectionConfig'];
-        $sectionConfig = $sectionConfig->getGeneratorConfig()->toArray();
-        $generatorConfig = self::checkSectionOverrides($sectionConfig, $generatorConfig, (string) $propertyName);
+        try {
+            $sectionConfig = $sectionConfig->getGeneratorConfig()->toArray();
+            $generatorConfig = self::checkSectionOverrides($sectionConfig, $generatorConfig, (string) $propertyName);
+        } catch (\InvalidArgumentException $exception) {
+            //
+        }
 
         if (!empty($generatorConfig['entity']['validator'])) {
             $asString = str_replace(

@@ -13,7 +13,6 @@ declare (strict_types=1);
 
 namespace Tardigrades\SectionField\Generator;
 
-use Assert\InvalidArgumentException;
 use Doctrine\Common\Util\Inflector;
 use ReflectionClass;
 use Tardigrades\Entity\FieldInterface;
@@ -25,6 +24,7 @@ use Tardigrades\SectionField\Generator\Writer\Writable;
 use Tardigrades\SectionField\ValueObject\Handle;
 use Tardigrades\SectionField\ValueObject\SectionConfig;
 use Tardigrades\SectionField\ValueObject\SlugField;
+use Assert\InvalidArgumentException;
 
 class EntityGenerator extends Generator implements GeneratorInterface
 {
@@ -138,7 +138,7 @@ class EntityGenerator extends Generator implements GeneratorInterface
                 'relationship' => $relationship
             ];
 
-            $fieldTypeSpecClass = (string)$field->getFieldType()->getFullyQualifiedClassName();
+            $fieldTypeSpecClass = (string) $field->getFieldType()->getFullyQualifiedClassName();
             foreach ($fieldTypeSpecClass::getCofields($newMetadata['handle']) as $coHandle) {
                 $this->metadata[$coHandle] = [
                     'handle' => $coHandle,
@@ -414,7 +414,7 @@ EOT;
         $metadata = '';
         try {
             $generatorConfig = $this->sectionConfig->getGeneratorConfig()->toArray();
-            if (is_array($generatorConfig['entity'])) {
+            if (!empty($generatorConfig['entity']) && is_array($generatorConfig['entity'])) {
                 foreach ($generatorConfig['entity'] as $handle => $options) {
                     $field = $this->fieldManager->readByHandle(Handle::fromString($handle));
                     $templateDirectory = $this->getFieldTypeTemplateDirectory(
