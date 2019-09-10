@@ -13,6 +13,7 @@ declare (strict_types=1);
 
 namespace Tardigrades\SectionField\Generator;
 
+use Assert\InvalidArgumentException;
 use Doctrine\Common\Util\Inflector;
 use ReflectionClass;
 use Tardigrades\Entity\FieldInterface;
@@ -410,60 +411,62 @@ EOT;
 
     private function insertValidationMetadata(string $template): string
     {
-        $generatorConfig = $this->sectionConfig->getGeneratorConfig()->toArray();
         $metadata = '';
-
-        if (is_array($generatorConfig['entity'])) {
-            foreach ($generatorConfig['entity'] as $handle => $options) {
-                $field = $this->fieldManager->readByHandle(Handle::fromString($handle));
-                $templateDirectory = $this->getFieldTypeTemplateDirectory(
-                    $field,
-                    'sexy-field-' . self::GENERATE_FOR
-                );
-
-                foreach ($options as $assertion => $assertionOptions) {
-                    if ($assertionOptions) {
-                        try {
-                            $asString = (string)Template::create(
-                                (string)TemplateLoader::load(
-                                    $templateDirectory . '/GeneratorTemplate/entity.validator-metadata.php.template'
-                                )
-                            );
-                            $asString = str_replace(
-                                '{{ propertyName }}',
-                                $field->getHandle(),
-                                $asString
-                            );
-                            $asString = str_replace(
-                                '{{ assertion }}',
-                                $assertion,
-                                $asString
-                            );
-                            $arguments = '';
-                            if (is_array($assertionOptions)) {
-                                foreach ($assertionOptions as $optionKey => $optionValue) {
-                                    $arguments .= "'{$optionKey}' => '{$optionValue}',";
+        try {
+            $generatorConfig = $this->sectionConfig->getGeneratorConfig()->toArray();
+            if (is_array($generatorConfig['entity'])) {
+                foreach ($generatorConfig['entity'] as $handle => $options) {
+                    $field = $this->fieldManager->readByHandle(Handle::fromString($handle));
+                    $templateDirectory = $this->getFieldTypeTemplateDirectory(
+                        $field,
+                        'sexy-field-' . self::GENERATE_FOR
+                    );
+                    foreach ($options as $assertion => $assertionOptions) {
+                        if ($assertionOptions) {
+                            try {
+                                $asString = (string)Template::create(
+                                    (string)TemplateLoader::load(
+                                        $templateDirectory . '/GeneratorTemplate/entity.validator-metadata.php.template'
+                                    )
+                                );
+                                $asString = str_replace(
+                                    '{{ propertyName }}',
+                                    $field->getHandle(),
+                                    $asString
+                                );
+                                $asString = str_replace(
+                                    '{{ assertion }}',
+                                    $assertion,
+                                    $asString
+                                );
+                                $arguments = '';
+                                if (is_array($assertionOptions)) {
+                                    foreach ($assertionOptions as $optionKey => $optionValue) {
+                                        $arguments .= "'{$optionKey}' => '{$optionValue}',";
+                                    }
+                                    if (!empty($arguments)) {
+                                        $arguments = rtrim($arguments, ',');
+                                        $arguments = "[{$arguments}]";
+                                    }
                                 }
-                                if (!empty($arguments)) {
-                                    $arguments = rtrim($arguments, ',');
-                                    $arguments = "[{$arguments}]";
+                                $asString = str_replace(
+                                    '{{ assertionOptions }}',
+                                    $arguments,
+                                    $asString
+                                );
+                                if (strpos($template, $asString) === false) {
+                                    // Add to metadata
+                                    $metadata .= $asString;
                                 }
+                            } catch (\Exception $exception) {
+                                $this->buildMessages[] = $exception->getMessage();
                             }
-                            $asString = str_replace(
-                                '{{ assertionOptions }}',
-                                $arguments,
-                                $asString
-                            );
-                            if (strpos($template, $asString) === false) {
-                                // Add to metadata
-                                $metadata .= $asString;
-                            }
-                        } catch (\Exception $exception) {
-                            $this->buildMessages[] = $exception->getMessage();
                         }
                     }
                 }
             }
+        } catch (InvalidArgumentException $exception) {
+            // No problem, has no generator specific config in the section config
         }
 
         // Insert
