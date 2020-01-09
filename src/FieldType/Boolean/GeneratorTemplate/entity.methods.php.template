@@ -1,0 +1,10 @@
+public function get{{ methodName }}(): bool
+{
+    return $this->{{ propertyName }};
+}
+
+public function set{{ methodName }}(bool ${{ propertyName }}): {{ section }}
+{
+    $this->{{ propertyName }} = ${{ propertyName }};
+    return $this;
+}
