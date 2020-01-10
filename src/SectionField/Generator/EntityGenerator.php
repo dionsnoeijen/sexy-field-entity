@@ -483,6 +483,27 @@ EOT;
         return $template;
     }
 
+    private function insertEntityInterfaces(string $template): string
+    {
+        $entityInterfaces = $this->sectionConfig->getEntityInterfaces();
+
+        if (!empty($entityInterfaces)) {
+            $template = str_replace(
+                '{{ entityInterfaces }}',
+                ', ' . implode(', ', $entityInterfaces) ,
+                $template
+            );
+        } else {
+            $template = str_replace(
+                '{{ entityInterfaces }}',
+                '',
+                $template
+            );
+        }
+
+        return $template;
+    }
+
     private function generateEntity(): Template
     {
         $template = TemplateLoader::load(__DIR__ . '/GeneratorTemplate/entity.php.template');
@@ -495,6 +516,7 @@ EOT;
         $template = $this->insertValidationMetadata($template);
         $template = PhpFormatter::format($template);
         $template = $this->insertFieldMetadata($template);
+        $template = $this->insertEntityInterfaces($template);
 
         return Template::create($template);
     }

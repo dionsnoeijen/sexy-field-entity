@@ -118,6 +118,12 @@ final class EntityGeneratorTest extends TestCase
         $this->assertInstanceOf(Writable::class, $generated);
         $this->assertEquals('My\\Sexy\\Namespace\\Entity\\', $generated->getNamespace());
         $this->assertEquals('Sexyhandle.php', $generated->getFilename());
+
+        if (!empty($configArrayForSection['section']['entityInterfaces'])) {
+            $this->assertEquals($this->getTemplateOutputWithInterfaces(), $generated->getTemplate());
+        } else {
+            $this->assertEquals($this->getTemplateOutputWithoutInterfaces(), $generated->getTemplate());
+        }
     }
 
     public function configProvider()
@@ -132,6 +138,7 @@ final class EntityGeneratorTest extends TestCase
                         'slug' => ['these'],
                         'default' => 'these',
                         'namespace' => 'My\Sexy\Namespace',
+                        'entityInterfaces' => ['Namespace\OneInterface', 'Namespace\SecondInterface'],
                         'generator' =>
                             ['entity' =>
                                 [
@@ -159,6 +166,160 @@ final class EntityGeneratorTest extends TestCase
                 ]
             ]
         ];
+    }
+
+    private function getTemplateOutputWithInterfaces()
+    {
+        return "<?php
+declare (strict_types=1);
+
+namespace My\Sexy\Namespace\Entity;
+
+use Tardigrades;
+use Tardigrades\SectionField\Generator\CommonSectionInterface;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
+
+class Sexyhandle implements CommonSectionInterface, Namespace\OneInterface, Namespace\SecondInterface
+{
+    use Extra\SexyhandleTrait;
+
+    const FIELDS = [
+        'one' => [
+            'handle' => 'one',
+            'type' => 'typoe',
+            'parent' => null,
+            'getter' => 'getOne',
+            'setter' => 'setOne',
+            'relationship' => null,
+        ],
+        'two' => [
+            'handle' => 'two',
+            'type' => 'typoe',
+            'parent' => null,
+            'getter' => 'getTwo',
+            'setter' => 'setTwo',
+            'relationship' => null,
+        ],
+    ];
+
+    /** @var ?int */
+    private \$id;
+
+    public function __construct()
+    {
+    }
+
+    public function getId(): ?int
+    {
+        return \$this->id;
+    }
+
+    public function getDefault(): string
+    {
+        if (\$this->these === null) {
+            throw new \UnexpectedValueException('these is null, cannot get default value');
+        }
+        return \$this->these;
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata \$metadata): void
+    {
+    {{ validatorMetadata }}
+    }
+
+    public function onPrePersist(): void
+    {
+    }
+
+    public function onPreUpdate(): void
+    {
+    }
+
+    public static function fieldInfo(): array
+    {
+        return static::FIELDS;
+    }
+}
+";
+
+    }
+
+    private function getTemplateOutputWithoutInterfaces()
+    {
+        return "<?php
+declare (strict_types=1);
+
+namespace My\Sexy\Namespace\Entity;
+
+use Tardigrades;
+use Tardigrades\SectionField\Generator\CommonSectionInterface;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
+
+class Sexyhandle implements CommonSectionInterface
+{
+    use Extra\SexyhandleTrait;
+
+    const FIELDS = [
+        'one' => [
+            'handle' => 'one',
+            'type' => 'typoe',
+            'parent' => null,
+            'getter' => 'getOne',
+            'setter' => 'setOne',
+            'relationship' => null,
+        ],
+        'two' => [
+            'handle' => 'two',
+            'type' => 'typoe',
+            'parent' => null,
+            'getter' => 'getTwo',
+            'setter' => 'setTwo',
+            'relationship' => null,
+        ],
+    ];
+
+    /** @var ?int */
+    private \$id;
+
+    public function __construct()
+    {
+    }
+
+    public function getId(): ?int
+    {
+        return \$this->id;
+    }
+
+    public function getDefault(): string
+    {
+        if (\$this->these === null) {
+            throw new \UnexpectedValueException('these is null, cannot get default value');
+        }
+        return \$this->these;
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata \$metadata): void
+    {
+    {{ validatorMetadata }}
+    }
+
+    public function onPrePersist(): void
+    {
+    }
+
+    public function onPreUpdate(): void
+    {
+    }
+
+    public static function fieldInfo(): array
+    {
+        return static::FIELDS;
+    }
+}
+";
+
     }
 }
 

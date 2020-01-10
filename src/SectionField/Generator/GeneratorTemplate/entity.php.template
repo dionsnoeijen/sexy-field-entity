@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
 {{ use }}
 
-class {{ section }} implements CommonSectionInterface
+class {{ section }} implements CommonSectionInterface{{ entityInterfaces }}
 {
     use Extra\{{ section }}Trait;
 
