@@ -15,7 +15,7 @@
     "symfony/dependency-injection": "^4",
     "symfony/yaml": "^4",
     "symfony/config": "^4",
-    "beberlei/assert": "2.6.5"
+    "beberlei/assert": "^3.2"
   },
   "autoload": {
     "psr-4": {
