@@ -27,7 +27,7 @@ class JmsSerializerConfigGenerator extends Generator implements GeneratorInterfa
         $sectionConfig = $section->getConfig();
         $location = $sectionConfig->getNamespace() . '\\Resources\\config\\serializer\\';
         $class = 'Model.' . $sectionConfig->getClassName();
-        $fqcEntity = FullyQualifiedClassName::fromNamespaceAndClassName(
+        $fqcnEntity = FullyQualifiedClassName::fromNamespaceAndClassName(
             $sectionConfig->getNamespace(),
             $sectionConfig->getClassName()
         );
@@ -40,20 +40,25 @@ class JmsSerializerConfigGenerator extends Generator implements GeneratorInterfa
         }
 
         $configuration = Yaml::dump($sectionConfig['section']['serializer']);
+
+        // Make sure it's properly indented
+        $parsedConfiguration = '';
+        foreach(preg_split("/((\r?\n)|(\r\n?))/", $configuration) as $line) {
+            $parsedConfiguration .= '    ' . $line . "\n";
+        }
         $template = TemplateLoader::load(
             __DIR__ . '/GeneratorTemplate/jmsserializer.yml.template'
         );
         $template = str_replace(
-            ['{{ fcqEntity }}', '{{ configuration }}'],
-            [ (string) $fqcEntity, $configuration ],
+            ['{{ fqcnEntity }}', '{{ configuration }}'],
+            [ (string) $fqcnEntity, $parsedConfiguration ],
             $template
         );
 
         return Writable::create(
             $template,
             $location,
-            "$class.yml",
-            false
+            "$class.yml"
         );
     }
 }
