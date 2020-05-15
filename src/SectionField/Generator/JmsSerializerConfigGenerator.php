@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Tardigrades\SectionField\Generator;
 
 use Symfony\Component\Yaml\Yaml;
+use Tardigrades\Entity\FieldInterface;
 use Tardigrades\Entity\SectionInterface;
 use Tardigrades\SectionField\Generator\Loader\TemplateLoader;
 use Tardigrades\SectionField\Generator\Writer\Writable;
@@ -25,30 +26,39 @@ class JmsSerializerConfigGenerator extends Generator implements GeneratorInterfa
     public function generateBySection(SectionInterface $section): Writable
     {
         $sectionConfig = $section->getConfig();
+
         $location = $sectionConfig->getNamespace() . '\\Resources\\config\\serializer\\';
-        $class = 'Model.' . $sectionConfig->getClassName();
         $fqcnEntity = FullyQualifiedClassName::fromNamespaceAndClassName(
             $sectionConfig->getNamespace(),
             $sectionConfig->getClassName()
         );
+        $class = str_replace('\\', '.', (string) $fqcnEntity);
 
+        $fields = $this->fieldManager->readByHandles($sectionConfig->getFields());
+        $fieldsSerializerConfig = $this->parseFieldProperties($fields);
         $sectionConfig = $sectionConfig->toArray();
-        if (empty($sectionConfig['section']) ||
-            empty($sectionConfig['section']['serializer'])
+        $sectionSerializerConfig = [];
+        if (!empty($sectionConfig['section']) &&
+            !empty($sectionConfig['section']['serializer'])
         ) {
+            $sectionSerializerConfig = $sectionConfig['section']['serializer'];
+        }
+        $configuration = array_replace_recursive($fieldsSerializerConfig, $sectionSerializerConfig);
+
+        // If no configuration for this section,
+        // don't generate a file
+        if (empty($configuration)) {
             throw new NoJmsConfigurationException();
         }
 
-        $configuration = Yaml::dump($sectionConfig['section']['serializer']);
-
-        // Make sure it's properly indented
+        // Make a properly indented yaml
+        $configuration = Yaml::dump($configuration);
         $parsedConfiguration = '';
         foreach(preg_split("/((\r?\n)|(\r\n?))/", $configuration) as $line) {
             $parsedConfiguration .= '    ' . $line . "\n";
         }
-        $template = TemplateLoader::load(
-            __DIR__ . '/GeneratorTemplate/jmsserializer.yml.template'
-        );
+
+        $template = TemplateLoader::load(__DIR__ . '/GeneratorTemplate/jmsserializer.yml.template');
         $template = str_replace(
             ['{{ fqcnEntity }}', '{{ configuration }}'],
             [ (string) $fqcnEntity, $parsedConfiguration ],
@@ -60,5 +70,21 @@ class JmsSerializerConfigGenerator extends Generator implements GeneratorInterfa
             $location,
             "$class.yml"
         );
+    }
+
+    private function parseFieldProperties(array $fields): array
+    {
+        $result = [ 'properties' => [] ];
+        /** @var FieldInterface $field */
+        foreach ($fields as $field) {
+            $fieldConfig = $field->getConfig()->toArray();
+            if (!empty($fieldConfig['field']) &&
+                !empty($fieldConfig['field']['serializer'])
+            ) {
+                $result['properties'][(string) $field->getHandle()] = $fieldConfig['field']['serializer'];
+            }
+        }
+
+        return $result;
     }
 }
