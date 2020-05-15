@@ -42,13 +42,16 @@ class JmsSerializerConfigGenerator extends Generator implements GeneratorInterfa
         ) {
             $sectionSerializerConfig = $sectionConfig['section']['serializer'];
         }
-        $configuration = array_replace_recursive($fieldsSerializerConfig, $sectionSerializerConfig);
 
         // If no configuration for this section,
         // don't generate a file
-        if (empty($configuration)) {
-            throw new NoJmsConfigurationException();
+        if (empty($sectionSerializerConfig) &&
+            empty($fieldsSerializerConfig['properties'])
+        ) {
+            throw new \Exception('no');
         }
+
+        $configuration = array_replace_recursive($fieldsSerializerConfig, $sectionSerializerConfig);
 
         // Make a properly indented yaml
         $configuration = Yaml::dump($configuration);
