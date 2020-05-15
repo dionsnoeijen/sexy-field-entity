@@ -48,7 +48,7 @@ class JmsSerializerConfigGenerator extends Generator implements GeneratorInterfa
         if (empty($sectionSerializerConfig) &&
             empty($fieldsSerializerConfig['properties'])
         ) {
-            throw new \Exception('no');
+            throw new NoJmsConfigurationException();
         }
 
         $configuration = array_replace_recursive($fieldsSerializerConfig, $sectionSerializerConfig);
