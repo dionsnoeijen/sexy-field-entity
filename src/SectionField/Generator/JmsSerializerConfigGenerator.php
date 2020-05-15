@@ -18,7 +18,6 @@ use Tardigrades\Entity\FieldInterface;
 use Tardigrades\Entity\SectionInterface;
 use Tardigrades\SectionField\Generator\Loader\TemplateLoader;
 use Tardigrades\SectionField\Generator\Writer\Writable;
-use Tardigrades\SectionField\Service\NoJmsConfigurationException;
 use Tardigrades\SectionField\ValueObject\FullyQualifiedClassName;
 
 class JmsSerializerConfigGenerator extends Generator implements GeneratorInterface

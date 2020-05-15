@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Tardigrades\SectionField\Service;
+namespace Tardigrades\SectionField\Generator;
 
 use Throwable;
 
