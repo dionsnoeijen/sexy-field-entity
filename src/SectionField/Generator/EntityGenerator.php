@@ -13,7 +13,7 @@ declare (strict_types=1);
 
 namespace Tardigrades\SectionField\Generator;
 
-use Doctrine\Common\Util\Inflector;
+use Doctrine\Common\Inflector\Inflector;
 use ReflectionClass;
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\Entity\SectionInterface;
