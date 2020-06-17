@@ -13,7 +13,7 @@ declare (strict_types=1);
 
 namespace Tardigrades\FieldType\Relationship\Generator;
 
-use Doctrine\Common\Util\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\FieldType\Generator\GeneratorInterface;
 use Tardigrades\FieldType\ValueObject\Template;
@@ -43,14 +43,16 @@ class EntityMethodsGenerator implements GeneratorInterface
         } catch (\Exception $exception) {
         }
 
+        $inflector = InflectorFactory::create()->build();
+
         return Template::create((string) TemplateLoader::load(
             (string) $templateDir .
             '/GeneratorTemplate/entity.methods.php',
             [
                 'kind' => $fieldConfig['field']['kind'],
                 'type' => $fieldConfig['field']['relationship-type'],
-                'pluralMethodName' => ucfirst(Inflector::pluralize($toHandle)),
-                'pluralPropertyName' => Inflector::pluralize($toHandle),
+                'pluralMethodName' => ucfirst($inflector->pluralize($toHandle)),
+                'pluralPropertyName' => $inflector->pluralize($toHandle),
                 'methodName' => ucfirst($toHandle),
                 'entity' => ucfirst($fieldConfig['field']['to']),
                 'propertyName' => $toHandle,

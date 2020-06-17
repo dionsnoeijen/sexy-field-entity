@@ -13,7 +13,7 @@ declare (strict_types=1);
 
 namespace Tardigrades\FieldType\Slug\Generator;
 
-use Doctrine\Common\Util\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\FieldType\Generator\GeneratorInterface;
 use Tardigrades\FieldType\ValueObject\PrePersistTemplate;
@@ -81,7 +81,8 @@ class EntityPrePersistGenerator implements GeneratorInterface
         $body = '';
         foreach ($slug->toArray() as $element) {
             $element = explode('|', $element);
-            $getter = '$this->get' . Inflector::classify($element[0]) . '()';
+            $inflector = InflectorFactory::create()->build();
+            $getter = '$this->get' . $inflector->classify($element[0]) . '()';
             $body .= <<<EOT
 \$$element[0] = $getter;
 if (\$$element[0] === null) {

@@ -13,7 +13,7 @@ declare (strict_types=1);
 
 namespace Tardigrades\FieldType\Relationship\Generator;
 
-use Doctrine\Common\Util\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\FieldType\Generator\GeneratorInterface;
 use Tardigrades\FieldType\ValueObject\Template;
@@ -28,12 +28,14 @@ class EntityPropertiesGenerator implements GeneratorInterface
 
         $toHandle = $fieldConfig['field']['as'] ?? $fieldConfig['field']['to'];
 
+        $inflector = InflectorFactory::create()->build();
+
         return Template::create((string) TemplateLoader::load(
             $templateDir .
             '/GeneratorTemplate/entity.properties.php',
             [
                 'kind' => $fieldConfig['field']['kind'],
-                'pluralPropertyName' => Inflector::pluralize($toHandle),
+                'pluralPropertyName' => $inflector->pluralize($toHandle),
                 'entity' => ucfirst($fieldConfig['field']['to']),
                 'propertyName' => $toHandle
             ]

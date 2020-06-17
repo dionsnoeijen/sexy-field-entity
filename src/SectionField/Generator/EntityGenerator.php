@@ -13,7 +13,7 @@ declare (strict_types=1);
 
 namespace Tardigrades\SectionField\Generator;
 
-use Doctrine\Common\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use ReflectionClass;
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\Entity\SectionInterface;
@@ -103,7 +103,8 @@ class EntityGenerator extends Generator implements GeneratorInterface
                 $kind = $fieldConfigArray['field']['kind'];
                 if ($kind === 'one-to-many' || $kind === 'many-to-many') {
                     $plural = true;
-                    $propertyName = Inflector::pluralize($singularPropertyName);
+                    $inflector = InflectorFactory::create()->build();
+                    $propertyName = $inflector->pluralize($singularPropertyName);
                     $setter = 'add' . ucfirst($singularPropertyName);
                 } else {
                     $plural = false;

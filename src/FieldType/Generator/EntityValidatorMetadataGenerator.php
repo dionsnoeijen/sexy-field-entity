@@ -13,7 +13,7 @@ declare (strict_types = 1);
 
 namespace Tardigrades\FieldType\Generator;
 
-use Doctrine\Common\Util\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\FieldType\ValueObject\Template;
 use Tardigrades\FieldType\ValueObject\TemplateDir;
@@ -45,7 +45,8 @@ class EntityValidatorMetadataGenerator implements GeneratorInterface
             switch ($fieldConfig['field']['kind']) {
                 case 'many-to-many':
                 case 'one-to-many':
-                    $propertyName = Inflector::pluralize((string) $propertyName);
+                    $inflector = InflectorFactory::create()->build();
+                    $propertyName = $inflector->pluralize((string) $propertyName);
                     break;
             }
         }
