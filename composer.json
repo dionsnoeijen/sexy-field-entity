@@ -24,7 +24,7 @@
     }
   },
   "require-dev": {
-    "tardigrades/sexy-field": "dev-sym-4.x",
+    "tardigrades/sexy-field": "dev-integrate-create-and-delete-options",
     "phpunit/phpunit": "^7.0",
     "mockery/mockery": "^1.0",
     "mikey179/vfsstream": "^1.6",

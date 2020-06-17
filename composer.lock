@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3eba3c88381a6c8a29ef7664a57b2264",
+    "content-hash": "017264ce2096956f6485b52be2575353",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -6017,22 +6017,22 @@
         },
         {
             "name": "tardigrades/sexy-field",
-            "version": "dev-sym-4.x",
+            "version": "dev-integrate-create-and-delete-options",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dionsnoeijen/sexy-field.git",
-                "reference": "1ec9da5b5aa654c8fbccb172012cfd9bae459fb1"
+                "reference": "567aa4797f7e071ba447ad3c7ecdb833426ac73f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dionsnoeijen/sexy-field/zipball/1ec9da5b5aa654c8fbccb172012cfd9bae459fb1",
-                "reference": "1ec9da5b5aa654c8fbccb172012cfd9bae459fb1",
+                "url": "https://api.github.com/repos/dionsnoeijen/sexy-field/zipball/567aa4797f7e071ba447ad3c7ecdb833426ac73f",
+                "reference": "567aa4797f7e071ba447ad3c7ecdb833426ac73f",
                 "shasum": ""
             },
             "require": {
-                "beberlei/assert": "^3.2",
+                "beberlei/assert": "^3",
                 "doctrine/orm": "^2.5.6",
-                "php": "^7.1",
+                "php": "^7.2",
                 "php-coveralls/php-coveralls": "^1.0",
                 "symfony/cache": "^4",
                 "symfony/config": "^4",
@@ -6049,9 +6049,8 @@
             },
             "require-dev": {
                 "mikey179/vfsstream": "^1.6",
-                "mockery/mockery": "^0.9.9",
-                "phing/phing": "^2.16",
-                "phpunit/phpunit": "^6.1",
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^7.0",
                 "squizlabs/php_codesniffer": "^3.2"
             },
             "type": "library",
@@ -6071,7 +6070,7 @@
                 }
             ],
             "description": "SexyField helps you build application structure and accompanying forms.",
-            "time": "2020-02-20T12:21:04+00:00"
+            "time": "2020-06-17T12:49:33+00:00"
         },
         {
             "name": "theseer/tokenizer",
