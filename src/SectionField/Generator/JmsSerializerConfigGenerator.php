@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Tardigrades\SectionField\Generator;
 
-use Doctrine\Common\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use Symfony\Component\Yaml\Yaml;
 use Tardigrades\Entity\FieldInterface;
 use Tardigrades\Entity\SectionInterface;
@@ -87,7 +87,8 @@ class JmsSerializerConfigGenerator extends Generator implements GeneratorInterfa
                 $singularPropertyName = $fieldConfig['field']['as'] ?? $fieldConfig['field']['to'];
                 $kind = $fieldConfig['field']['kind'];
                 if ($kind === 'one-to-many' || $kind === 'many-to-many') {
-                    $propertyName = Inflector::pluralize($singularPropertyName);
+                    $inflector = InflectorFactory::create()->build();
+                    $propertyName = $inflector->pluralize($singularPropertyName);
                 } else {
                     $propertyName = $singularPropertyName;
                 }
