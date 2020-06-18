@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "017264ce2096956f6485b52be2575353",
+    "content-hash": "fdcb4b6f497dceade379097b611b2494",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -6017,7 +6017,7 @@
         },
         {
             "name": "tardigrades/sexy-field",
-            "version": "dev-integrate-create-and-delete-options",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dionsnoeijen/sexy-field.git",
