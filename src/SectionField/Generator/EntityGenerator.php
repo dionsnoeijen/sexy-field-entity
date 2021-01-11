@@ -63,7 +63,7 @@ class EntityGenerator extends Generator implements GeneratorInterface
 
         $fields = $this->fieldManager->readByHandles($this->sectionConfig->getFields());
 
-        usort($fields, function(FieldInterface $a, FieldInterface $b) {
+        usort($fields, function (FieldInterface $a, FieldInterface $b) {
             return $a->getHandle() <=> $b->getHandle();
         });
 
@@ -83,7 +83,6 @@ class EntityGenerator extends Generator implements GeneratorInterface
     {
         /** @var FieldInterface $field */
         foreach ($fields as $field) {
-
             if ($this->shouldIgnore($field)) {
                 continue;
             }
@@ -93,10 +92,11 @@ class EntityGenerator extends Generator implements GeneratorInterface
             } catch (\Exception $exception) {
                 // No field specific config, that is no problem.
             }
-            $fieldTypeClass = (string)$field->getFieldType()->getFullyQualifiedClassName()->getClassName();
+            $fieldTypeClass = $field->getFieldType()->getFullyQualifiedClassName();
             $fieldTypeName = (string)$field->getFieldType()->getType();
             $fieldConfig = $field->getConfig();
-            if ($fieldTypeClass === 'Relationship') {
+            if ((string)$fieldTypeClass->getClassName() === 'Relationship' ||
+                in_array('Tardigrades\FieldType\Relationship\Relationship', class_parents((string)$fieldTypeClass))) {
                 $fieldConfigArray = $fieldConfig->toArray();
                 $singularPropertyName = $fieldConfigArray['field']['as'] ?? $fieldConfigArray['field']['to'];
 
@@ -228,7 +228,7 @@ class EntityGenerator extends Generator implements GeneratorInterface
 
         unset($info);
 
-        usort($this->prePersistInfo, function($a, $b) {
+        usort($this->prePersistInfo, function ($a, $b) {
             return
                 $a['config'][self::GENERATE_FOR]['prePersistOrder'] <=>
                 $b['config'][self::GENERATE_FOR]['prePersistOrder'];
@@ -255,7 +255,7 @@ class EntityGenerator extends Generator implements GeneratorInterface
 
         unset($info);
 
-        usort($this->preUpdateInfo, function($a, $b) {
+        usort($this->preUpdateInfo, function ($a, $b) {
             return
                 $a['config'][self::GENERATE_FOR]['preUpdateOrder'] <=>
                 $b['config'][self::GENERATE_FOR]['preUpdateOrder'];
@@ -491,7 +491,7 @@ EOT;
         if (!empty($entityInterfaces)) {
             $template = str_replace(
                 '{{ entityInterfaces }}',
-                ', ' . implode(', ', $entityInterfaces) ,
+                ', ' . implode(', ', $entityInterfaces),
                 $template
             );
         } else {
