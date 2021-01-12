@@ -41,17 +41,31 @@ final class EntityGeneratorTest extends TestCase
         $section->setConfig($configArrayForSection);
         $section->setHandle('sexyhandle');
 
-        $fieldTypeMock = Mockery::mock(new FieldType())->makePartial();
-        $fieldTypeMock->shouldReceive('getFullyQualifiedClassName')->andReturn(
+        $fieldTypeMocka = Mockery::mock(new FieldType())->makePartial();
+        $fieldTypeMocka->shouldReceive('getFullyQualifiedClassName')->andReturn(
             FullyQualifiedClassName::fromString(\Foo\Bar::class)
         );
-        $fieldTypeMock->shouldReceive('directory')->andReturn('one/two');
-        $fieldTypeMock->shouldReceive('getType')->andReturn(Type::fromString('typoe'));
+        $fieldTypeMocka->shouldReceive('directory')->andReturn('one/two');
+        $fieldTypeMocka->shouldReceive('getType')->andReturn(Type::fromString('typoe'));
+
+        $fieldTypeMockb = Mockery::mock(new FieldType())->makePartial();
+        $fieldTypeMockb->shouldReceive('getFullyQualifiedClassName')->andReturn(
+            FullyQualifiedClassName::fromString(\Tardigrades\FieldType\Relationship\Relationship::class)
+        );
+        $fieldTypeMockb->shouldReceive('directory')->andReturn('one/two');
+        $fieldTypeMockb->shouldReceive('getType')->andReturn(Type::fromString('typoe'));
+
+        $fieldTypeMockc = Mockery::mock(new FieldType())->makePartial();
+        $fieldTypeMockc->shouldReceive('getFullyQualifiedClassName')->andReturn(
+            FullyQualifiedClassName::fromString(\Tardigrades\FieldType\Relationship\ExtendedRelationship::class)
+        );
+        $fieldTypeMockc->shouldReceive('directory')->andReturn('one/two');
+        $fieldTypeMockc->shouldReceive('getType')->andReturn(Type::fromString('typoe'));
 
         $aField = new Field();
         $aField->setHandle('one');
         $aField->setName('one');
-        $aField->setFieldType($fieldTypeMock);
+        $aField->setFieldType($fieldTypeMocka);
         $aField->setConfig(['field' => [
             'name' => 'one',
             'handle' => 'one'
@@ -61,12 +75,28 @@ final class EntityGeneratorTest extends TestCase
         $bField = new Field();
         $bField->setHandle('two');
         $bField->setName('two');
-        $bField->setFieldType($fieldTypeMock);
+        $bField->setFieldType($fieldTypeMockb);
         $bField->setConfig(['field' => [
             'name' => 'two',
-            'handle' => 'two'
+            'handle' => 'two',
+            'to' => 'two',
+            'kind' => 'many-to-one',
+            'owner' => true
         ]]);
         $section->addField($bField);
+
+        $cField = new Field();
+        $cField->setHandle('two');
+        $cField->setName('two');
+        $cField->setFieldType($fieldTypeMockc);
+        $cField->setConfig(['field' => [
+            'name' => 'ten',
+            'handle' => 'ten',
+            'to' => 'ten',
+            'kind' => 'many-to-one',
+            'owner' => true
+        ]]);
+        $section->addField($cField);
 
         $sectionConfigForWritable = $section->getConfig();
 
@@ -100,14 +130,14 @@ final class EntityGeneratorTest extends TestCase
             ]
         );
 
-        $fieldTypeMock->shouldReceive('getFieldTypeGeneratorConfig')->once()
+        $fieldTypeMocka->shouldReceive('getFieldTypeGeneratorConfig')->once()
             ->andReturn($fieldConfig);
 
         $container->shouldReceive('get')->once()
-            ->andReturn($fieldTypeMock);
+            ->andReturn($fieldTypeMocka);
 
         $returnField = new Field();
-        $returnField->setFieldType($fieldTypeMock);
+        $returnField->setFieldType($fieldTypeMocka);
 
         $mockedFieldManager->shouldReceive('readByHandle')
             ->andReturn($returnField);
@@ -199,7 +229,25 @@ class Sexyhandle implements CommonSectionInterface, Namespace\OneInterface, Name
             'parent' => null,
             'getter' => 'getTwo',
             'setter' => 'setTwo',
-            'relationship' => null,
+            'relationship' => [
+                'class' => 'My\\\Sexy\\\Namespace\\\Entity\\\Two',
+                'plural' => false,
+                'kind' => 'many-to-one',
+                'owner' => true,
+            ],
+        ],
+        'ten' => [
+            'handle' => 'two',
+            'type' => 'typoe',
+            'parent' => null,
+            'getter' => 'getTen',
+            'setter' => 'setTen',
+            'relationship' => [
+                'class' => 'My\\\Sexy\\\Namespace\\\Entity\\\Ten',
+                'plural' => false,
+                'kind' => 'many-to-one',
+                'owner' => true,
+            ],
         ],
     ];
 
@@ -276,7 +324,25 @@ class Sexyhandle implements CommonSectionInterface
             'parent' => null,
             'getter' => 'getTwo',
             'setter' => 'setTwo',
-            'relationship' => null,
+            'relationship' => [
+                'class' => 'My\\\Sexy\\\Namespace\\\Entity\\\Two',
+                'plural' => false,
+                'kind' => 'many-to-one',
+                'owner' => true,
+            ],
+        ],
+        'ten' => [
+            'handle' => 'two',
+            'type' => 'typoe',
+            'parent' => null,
+            'getter' => 'getTen',
+            'setter' => 'setTen',
+            'relationship' => [
+                'class' => 'My\\\Sexy\\\Namespace\\\Entity\\\Ten',
+                'plural' => false,
+                'kind' => 'many-to-one',
+                'owner' => true,
+            ],
         ],
     ];
 
@@ -325,7 +391,26 @@ class Sexyhandle implements CommonSectionInterface
 
 namespace Foo;
 
-class Bar {
+class Bar
+{
+    public static function getCofields(string $handle): array
+    {
+        return [];
+    }
+}
+
+namespace Tardigrades\FieldType\Relationship;
+
+class Relationship
+{
+    public static function getCofields(string $handle): array
+    {
+        return [];
+    }
+}
+
+class ExtendedRelationship extends Relationship
+{
     public static function getCofields(string $handle): array
     {
         return [];
