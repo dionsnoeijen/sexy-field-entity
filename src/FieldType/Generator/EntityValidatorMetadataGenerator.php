@@ -64,7 +64,7 @@ class EntityValidatorMetadataGenerator implements GeneratorInterface
         if (!empty($generatorConfig['entity']['validator'])) {
             $asString = str_replace(
                 '{{ propertyName }}',
-                $propertyName,
+                (string) $propertyName,
                 $asString
             );
             $strings = [];
