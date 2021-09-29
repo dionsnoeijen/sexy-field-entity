@@ -64,12 +64,12 @@ class EntityMethodsGenerator implements GeneratorInterface
 
         $asString = str_replace(
             '{{ methodName }}',
-            $field->getConfig()->getMethodName(),
+            (string) $field->getConfig()->getMethodName(),
             $asString
         );
         $asString = str_replace(
             '{{ propertyName }}',
-            $field->getConfig()->getPropertyName(),
+            (string) $field->getConfig()->getPropertyName(),
             $asString
         );
 

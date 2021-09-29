@@ -29,7 +29,7 @@ class EntityPrePersistGenerator implements GeneratorInterface
 
             $asString = str_replace(
                 '{{ propertyName }}',
-                $field->getConfig()->getPropertyName(),
+                (string) $field->getConfig()->getPropertyName(),
                 $asString
             );
 

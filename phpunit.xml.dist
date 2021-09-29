@@ -4,21 +4,23 @@
     colors="true"
     bootstrap="vendor/autoload.php"
 >
-
     <testsuites>
         <testsuite name="unit">
             <directory>./test/unit</directory>
         </testsuite>
     </testsuites>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+    <coverage cacheDirectory="./build/coverage-cache">
+        <include>
             <directory suffix=".php">./src</directory>
-            <exclude>
-                <directory suffix=".php">./src/FieldType/Relationship/GeneratorTemplate</directory>
-                <directory suffix=".php">./src/FieldType/ConfigurationOverride/GeneratorTemplate</directory>
-                <directory suffix=".php">./src/FieldType/Choice/GeneratorTemplate</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+        </include>
+        <exclude>
+            <directory suffix=".php">./src/FieldType/Relationship/GeneratorTemplate</directory>
+            <directory suffix=".php">./src/FieldType/ConfigurationOverride/GeneratorTemplate</directory>
+            <directory suffix=".php">./src/FieldType/Choice/GeneratorTemplate</directory>
+        </exclude>
+        <report>
+            <clover outputFile="./build/clover.xml" />
+        </report>
+    </coverage>
 </phpunit>
+

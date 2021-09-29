@@ -334,7 +334,7 @@ EOT;
     private function insertSlug(string $template): string
     {
         try {
-            if ($this->sectionConfig->getSlugField() !== 'slug') {
+            if ((string) $this->sectionConfig->getSlugField() !== 'slug') {
                 $template = str_replace(
                     '{{ getSlug }}',
                     $this->generateSlugFieldGetMethod($this->sectionConfig->getSlugField()),
@@ -368,7 +368,7 @@ EOT;
     {
         $template = str_replace(
             '{{ section }}',
-            $this->sectionConfig->getClassName(),
+            (string) $this->sectionConfig->getClassName(),
             $template
         );
 
@@ -384,7 +384,7 @@ EOT;
     {
         $template = str_replace(
             '{{ namespace }}',
-            $this->getNamespace(),
+            (string) $this->getNamespace(),
             $template
         );
 
@@ -436,12 +436,12 @@ EOT;
                                 );
                                 $asString = str_replace(
                                     '{{ propertyName }}',
-                                    $field->getHandle(),
+                                    (string) $field->getHandle(),
                                     $asString
                                 );
                                 $asString = str_replace(
                                     '{{ assertion }}',
-                                    $assertion,
+                                    (string) $assertion,
                                     $asString
                                 );
                                 $arguments = '';
@@ -456,7 +456,7 @@ EOT;
                                 }
                                 $asString = str_replace(
                                     '{{ assertionOptions }}',
-                                    $arguments,
+                                    (string) $arguments,
                                     $asString
                                 );
                                 if (strpos($template, $asString) === false) {
@@ -477,7 +477,7 @@ EOT;
         // Insert
         $template = str_replace(
             '{{ validatorMetadataSectionPhase }}',
-            $metadata,
+            (string) $metadata,
             $template
         );
 
